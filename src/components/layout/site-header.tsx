@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { mainNav, meetingSchedule, siteConfig } from "@/config/site";
-import { AccountButton, AccountButtonPlaceholder, SignedInAs, drawerButtonClass } from "./account";
+import { AccountButton, AccountButtonPlaceholder, SignedInAs, drawerButtonPrimary } from "./account";
 import { LiveIndicator } from "./live-indicator";
 import { LiveNav } from "./live-nav";
 import { NavLinks } from "./nav-links";
@@ -65,7 +65,7 @@ export function SiteHeader() {
                   <Suspense fallback={<AccountButtonPlaceholder />}>
                     <AccountButton />
                   </Suspense>
-                  <Link href="/give" className={drawerButtonClass}>
+                  <Link href="/give" className={drawerButtonPrimary}>
                     Give
                   </Link>
                 </div>

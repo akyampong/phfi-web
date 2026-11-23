@@ -2,18 +2,23 @@ import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { SignOutButton } from "./sign-out-button";
 
-/** Outlined button style for the row at the foot of the menu drawer. */
-export const drawerButtonClass =
-  "label-caps inline-flex h-11 items-center justify-center rounded-squircle-xs text-[0.68rem] text-night-text ring-1 ring-white/25 ring-inset transition-colors hover:bg-white/10 hover:text-white";
+/**
+ * The two buttons at the foot of the menu drawer, styled like the site's buttons on dark
+ * (the hero's): Give is solid white, the main action; Sign in / Sign out is frosted glass.
+ */
+const drawerButton =
+  "inline-flex h-12 items-center justify-center rounded-squircle-xs px-5 text-[0.95rem] font-semibold transition-[background-color,scale] duration-200 active:scale-[0.98]";
+export const drawerButtonPrimary = `${drawerButton} bg-white text-ink hover:bg-white/90`;
+export const drawerButtonSecondary = `${drawerButton} bg-white/12 text-white backdrop-blur-md hover:bg-white/20`;
 
 /** "Sign in" for visitors, "Sign out" for members. Render inside <Suspense>. */
 export async function AccountButton() {
   const session = await getSession();
 
   return session ? (
-    <SignOutButton className={drawerButtonClass} />
+    <SignOutButton className={drawerButtonSecondary} />
   ) : (
-    <Link href="/sign-in" className={drawerButtonClass}>
+    <Link href="/sign-in" className={drawerButtonSecondary}>
       Sign in
     </Link>
   );
@@ -21,7 +26,7 @@ export async function AccountButton() {
 
 /** Holds the space while the session is checked, so the row does not shift. */
 export function AccountButtonPlaceholder() {
-  return <span aria-hidden className={`${drawerButtonClass} opacity-50`} />;
+  return <span aria-hidden className={`${drawerButtonSecondary} opacity-50`} />;
 }
 
 /** "Signed in as …" above the button row, for members only. Render inside <Suspense>. */

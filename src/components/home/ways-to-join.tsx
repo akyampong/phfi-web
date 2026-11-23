@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import type { Way } from "@/content/home";
 import { LiveAwareLink, LiveSignal } from "@/components/live/live-signal";
 import { Reveal } from "@/components/ui/reveal";
+import { groupUnderline } from "@/components/ui/styles";
 import { WayIcon } from "./way-icons";
 
 /** A centred heading over four ways into the fellowship, kept apart by space alone. */
@@ -34,7 +35,8 @@ export function WaysToJoin({ ways }: { ways: Way[] }) {
               <LiveAwareLink
                 action={{ label: way.action, href: way.href }}
                 liveAction={way.liveAction}
-                className="mt-6 inline-flex items-center gap-1 self-start text-[0.95rem] font-semibold text-ink underline-offset-4 hover:underline"
+                className="group mt-6 inline-flex items-center gap-1 self-start text-[0.95rem] font-semibold text-ink"
+                labelClassName={groupUnderline}
               >
                 <ChevronRight
                   aria-hidden

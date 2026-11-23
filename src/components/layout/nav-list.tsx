@@ -53,13 +53,15 @@ export function NavList({ items, isLive, activeHref = null, variant = "desktop" 
               {live && <span aria-hidden className="animate-live size-2 rounded-full bg-live" />}
               {/* The underline sits just under the label, not at the bottom of the header. */}
               <span
-                // The underline grows out from the centre on hover, and stays for the current section
-                className={`relative after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-center after:rounded-full after:transition-[scale,background-color] after:duration-300 after:ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                // The underline draws in from the left on hover, like every underline on the site,
+                // and stays for the current section. It's the calendar's blue (#0a84ff), the one
+                // accent colour in the site's UI.
+                className={`relative after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-left after:rounded-full after:transition-[scale,background-color] after:duration-300 after:ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   live
                     ? "after:scale-x-0"
                     : active
-                      ? "after:scale-x-100 after:bg-ink"
-                      : "after:scale-x-0 after:bg-rule-strong group-hover:after:scale-x-100"
+                      ? "after:scale-x-100 after:bg-[#0a84ff]"
+                      : "after:scale-x-0 after:bg-[#0a84ff] group-hover:after:scale-x-100"
                 }`}
               >
                 {item.label}

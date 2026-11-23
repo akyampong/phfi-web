@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { footerNav, siteConfig, socialLinks } from "@/config/site";
+import { hoverUnderline } from "@/components/ui/styles";
 
 /** White footer: logo and description, the site's link columns, then copyright and legal links. */
 export function SiteFooter() {
@@ -26,7 +27,7 @@ export function SiteFooter() {
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-[0.95rem] text-body underline-offset-4 hover:text-ink hover:underline"
+                          className={`text-[0.95rem] text-body transition-colors hover:text-ink ${hoverUnderline}`}
                         >
                           {link.label}
                         </Link>

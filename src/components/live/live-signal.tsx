@@ -31,18 +31,21 @@ export function LiveAwareLink({
   action,
   liveAction,
   className,
+  labelClassName,
   children,
 }: {
   action: LinkTarget;
   liveAction?: LinkTarget;
   className?: string;
+  /** Classes for the words alone (not the icon after them), e.g. an underline. */
+  labelClassName?: string;
   children?: ReactNode;
 }) {
   const { live } = useLiveStatus();
   const target = live && liveAction ? liveAction : action;
   return (
     <Link href={target.href} className={className}>
-      {target.label}
+      <span className={labelClassName}>{target.label}</span>
       {children}
     </Link>
   );

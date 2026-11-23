@@ -361,3 +361,14 @@
     animation: none;
   }
 }
+
+/*
+  Light mode only, even on Next's built-in error screens. Those screens add their own
+  unlayered `body { background: #000 }` when the device is in dark mode, which beats the
+  layered rule in @layer base and can stay behind after navigating away (a black page).
+  `html body` is more specific than `body`, so the site's paper background always wins.
+*/
+html body {
+  background-color: var(--color-paper);
+  color: var(--color-body);
+}

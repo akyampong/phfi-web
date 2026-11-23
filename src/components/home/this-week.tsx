@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { buttonPrimary } from "@/components/ui/styles";
+import { buttonPrimary, groupUnderline } from "@/components/ui/styles";
 import type { ThisWeek as ThisWeekData } from "@/content/home";
 import { Reveal } from "@/components/ui/reveal";
 import { VerseActions } from "./verse-actions";
@@ -60,9 +60,9 @@ export function ThisWeek({ week }: { week: ThisWeekData }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                className="underline-offset-4 hover:underline"
+                className="group"
               >
-                <cite className="not-italic">
+                <cite className={`not-italic ${groupUnderline}`}>
                   <span className="font-semibold text-ink">{verse.reference}</span>
                   <span className="text-muted"> · {TRANSLATION}</span>
                 </cite>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 
 /**
  * The hamburger button and its drawer: a dark panel the full height of the window
@@ -59,9 +59,12 @@ export function SiteMenu({ children }: { children: ReactNode }) {
         aria-controls={panelId}
         aria-label="Open menu"
         onClick={() => setOpen(true)}
-        className="inline-flex size-10 cursor-pointer items-center justify-center text-ink"
+        className="-mr-1 inline-flex size-10 cursor-pointer items-center justify-center text-ink"
       >
-        <Menu className="size-6" />
+        {/* A modern two-line menu icon: two equal, rounded lines, wider than they are tall */}
+        <svg aria-hidden viewBox="0 0 28 28" fill="none" className="size-7">
+          <path d="M3 9h22M3 19h22" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" />
+        </svg>
       </button>
 
       <div inert={!open} className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`}>

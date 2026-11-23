@@ -39,9 +39,8 @@ export function FeaturedMessage({ message }: { message: ContentItem }) {
 
       <div className="lg:col-span-5">
         <h2 id="featured-title" className="text-headline text-ink text-balance">
-          <Link href={message.href} className="decoration-2 underline-offset-[0.14em] hover:underline">
-            {message.title}
-          </Link>
+          {/* Plain text: the video beside it and the button below already go to the message */}
+          {message.title}
         </h2>
         {message.subtitle && <p className="mt-5 text-lg font-medium text-ink">{message.subtitle}</p>}
         <p className="mt-5 max-w-[40ch] text-lead text-body">{message.excerpt}</p>

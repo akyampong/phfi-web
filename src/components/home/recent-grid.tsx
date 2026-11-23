@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, FileText, Play } from "lucide-react";
+import { ArrowRight, File, Play } from "lucide-react";
 import { Cover } from "@/components/art/cover";
-import { textLink } from "@/components/ui/styles";
+import { groupUnderline, textLink } from "@/components/ui/styles";
 import type { ContentItem } from "@/content/home";
 import { formatDate } from "@/lib/format";
 import { Reveal } from "@/components/ui/reveal";
@@ -15,7 +15,7 @@ export function RecentGrid({ items }: { items: ContentItem[] }) {
           Recently at Purpose House
         </h2>
         <Link href="/watch" className={`${textLink} mb-1 shrink-0`}>
-          View all
+          <span className={groupUnderline}>View all</span>
           <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </Reveal>
@@ -34,7 +34,8 @@ export function RecentGrid({ items }: { items: ContentItem[] }) {
 
 function ContentCard({ item }: { item: ContentItem }) {
   const isRecap = item.kind === "recap";
-  const Icon = isRecap ? Play : FileText;
+  // Both icons solid: a play button for recaps, a plain page (no lines) for articles
+  const Icon = isRecap ? Play : File;
   const kind = isRecap ? "Recap" : "Article";
 
   return (
@@ -48,8 +49,9 @@ function ContentCard({ item }: { item: ContentItem }) {
           sizes="(min-width: 1504px) 340px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 112px"
           className="transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
         />
-        <span className="label-caps absolute left-3 top-3 hidden items-center gap-1.5 rounded-squircle-xs bg-black/55 px-2 py-1 text-[0.62rem] text-white backdrop-blur-sm sm:inline-flex">
-          <Icon aria-hidden className={`size-3 ${isRecap ? "fill-current" : ""}`} />
+        {/* The kind of post, on frosted glass like the hero's arrows and the play button */}
+        <span className="absolute left-3 top-3 hidden items-center gap-1.5 rounded-squircle-xs bg-white/15 px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_16px_rgba(0,0,0,0.16)] backdrop-blur-xl backdrop-brightness-[0.85] sm:inline-flex">
+          <Icon aria-hidden className="size-3 fill-current" strokeWidth={2} />
           {kind}
         </span>
       </span>
@@ -57,7 +59,10 @@ function ContentCard({ item }: { item: ContentItem }) {
       <span className="block sm:mt-5">
         {/* On phones the picture is too small for the label, so it moves above the title */}
         <span className="mb-1 block text-xs font-medium text-muted sm:hidden">{kind}</span>
-        <h3 className="text-title text-ink group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
+        <h3 className="text-title text-ink">
+          {/* Underline draws in from the left while the card is hovered */}
+          <span className={groupUnderline}>{item.title}</span>
+        </h3>
         {item.subtitle && <p className="mt-1 text-[0.95rem] font-medium text-body">{item.subtitle}</p>}
         <p className="label-caps mt-2 text-[0.66rem] text-muted sm:mt-3">
           {formatDate(item.date)} · {item.length}
