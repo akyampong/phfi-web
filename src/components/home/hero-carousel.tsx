@@ -6,14 +6,12 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, Radio } from "lucide-react";
 import type { HeroSlide } from "@/content/home";
 import { useLiveStatus } from "@/lib/live-status";
+import { onImageButton, onImageGlassButton } from "@/components/ui/styles";
 
 const SLIDE_MS = 7000;
 
-const solidButton =
-  "inline-flex h-10 items-center justify-center rounded-squircle-xs bg-white px-4 text-[0.95rem] font-medium text-coal transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]";
-const glassButton =
-  "inline-flex h-10 items-center justify-center rounded-squircle-xs bg-white/15 px-4 text-[0.95rem] font-medium text-white backdrop-blur-md transition-[background-color,scale] duration-200 hover:bg-white/25 active:scale-[0.98]";
-
+const solidButton = onImageButton;
+const glassButton = onImageGlassButton;
 type Side = "left" | "right" | null;
 
 /**

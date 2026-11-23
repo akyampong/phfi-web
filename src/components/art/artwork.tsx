@@ -228,10 +228,12 @@ const motifs: Record<Motif, (props: MotifProps) => ReactNode> = {
         return (
           <line
             key={i}
-            x1={80 + Math.cos(angle) * inner}
-            y1={60 + Math.sin(angle) * inner}
-            x2={80 + Math.cos(angle) * outer}
-            y2={60 + Math.sin(angle) * outer}
+            // Rounded: the server and the browser can differ in the last digit of a sine,
+            // which React reports as a mismatch between their pages.
+            x1={round(80 + Math.cos(angle) * inner)}
+            y1={round(60 + Math.sin(angle) * inner)}
+            x2={round(80 + Math.cos(angle) * outer)}
+            y2={round(60 + Math.sin(angle) * outer)}
             stroke={p.a}
             strokeWidth="2.2"
             strokeLinecap="round"
@@ -274,3 +276,8 @@ const motifs: Record<Motif, (props: MotifProps) => ReactNode> = {
     </>
   ),
 };
+
+/** To three decimal places: plenty for a 160 × 120 drawing. */
+function round(n: number) {
+  return Math.round(n * 1000) / 1000;
+}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Radio } from "lucide-react";
 import type { NavItem } from "@/config/site";
 
 type NavListProps = {
@@ -50,7 +51,7 @@ export function NavList({ items, isLive, activeHref = null, variant = "desktop" 
                 live ? "text-live" : active ? "text-ink" : "text-body hover:text-ink"
               }`}
             >
-              {live && <span aria-hidden className="animate-live size-2 rounded-full bg-live" />}
+              {live && <Radio aria-hidden className="animate-live size-4" strokeWidth={2.25} />}
               {/* The underline sits just under the label, not at the bottom of the header. */}
               <span
                 // The underline draws in from the left on hover, like every underline on the site,
@@ -75,11 +76,13 @@ export function NavList({ items, isLive, activeHref = null, variant = "desktop" 
   );
 }
 
+/** The same red tag as beside the logo (live-pill.tsx): the pulsing broadcast icon and "Live". */
 function LiveBadge() {
   return (
-    <span className="label-caps inline-flex items-center gap-1.5 rounded-squircle-xs bg-live px-2 py-1 text-[0.6rem] text-white">
-      <span aria-hidden className="animate-live size-1.5 rounded-full bg-white" />
-      Live now
+    <span className="inline-flex h-7 items-center gap-1.5 rounded-squircle-xs bg-live px-2.5 text-[0.72rem] font-bold uppercase leading-none tracking-[0.06em] text-white">
+      <Radio aria-hidden className="animate-live size-3.5" strokeWidth={2.25} />
+      Live
+      <span className="sr-only">now</span>
     </span>
   );
 }

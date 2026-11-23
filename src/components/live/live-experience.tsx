@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Check, HandHeart, Heart, PanelRightClose, PanelRightOpen, Radio } from "lucide-react";
-import { ShareIcon } from "@/components/home/verse-actions";
+import { ArrowUpRight, HandHeart, Heart, PanelRightClose, PanelRightOpen, Radio } from "lucide-react";
 import { StartedAgo, useNow } from "@/components/live/schedule";
+import { ShareButton } from "@/components/ui/share-button";
+import { actionButton } from "@/components/ui/styles";
 import { meetingSchedule, meetingTimeZoneId, type Meeting } from "@/config/site";
 import type { ThisWeek } from "@/content/home";
 import { TRANSLATION, bibleComUrl } from "@/lib/bible";
 import { refreshLiveStatus, useLiveStatus } from "@/lib/live-status";
 import { useIsDark } from "@/lib/theme";
+import { useUnloadWhenHidden } from "@/lib/use-unload-when-hidden";
 import { occurrencesBetween, wallDate } from "@/lib/schedule";
 
 type Stream = { videoId: string; title: string; viewers?: number; startedAt?: string };
@@ -77,7 +79,7 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <ShareButton title={title} />
+          <ShareButton title={title} path="/live" />
           <Link href="/prayer" className={actionButton}>
             <HandHeart aria-hidden className="size-4" />
             Prayer request
@@ -175,8 +177,6 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
   );
 }
 
-const actionButton =
-  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-ink/[0.06] px-3.5 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-ink/10 active:scale-[0.98]";
 /** On the dark "stream has ended" overlay, which is dark in both modes. */
 const overlayButton =
   "inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-white/15 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline-white";
@@ -278,33 +278,6 @@ function EndedScreen({ videoId }: { videoId: string }) {
   );
 }
 
-/** Share the stream: the phone's share sheet where there is one, otherwise copy the link. */
-function ShareButton({ title }: { title: string }) {
-  const [copied, setCopied] = useState(false);
-
-  async function share() {
-    const url = `${window.location.origin}/live`;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title, url });
-        return;
-      }
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // The share sheet was closed, or copying isn't allowed here: nothing to do.
-    }
-  }
-
-  return (
-    <button type="button" onClick={share} className={actionButton}>
-      {copied ? <Check aria-hidden className="size-4" /> : <ShareIcon className="size-4" />}
-      <span aria-live="polite">{copied ? "Link copied" : "Share"}</span>
-    </button>
-  );
-}
-
 /**
  * The meeting this stream belongs to, if it's within one: from 30 minutes before a meeting's
  * start until an hour after it should finish. Untimed meetings count for their whole day.
@@ -322,23 +295,4 @@ function currentMeeting(now: Date): Meeting | undefined {
     return t >= start - 30 * 60_000 && t <= start + (o.meeting.durationMinutes + 60) * 60_000;
   });
   return match?.meeting;
-}
-
-/**
- * Unloads an iframe while its page is hidden, and loads it again when the page comes back.
- *
- * Next keeps pages you navigate away from alive but hidden (display: none), so going Back is
- * instant. Hidden doesn't stop a YouTube player, though: the stream would carry on playing out
- * of sight. React runs effect cleanups when a page is hidden, so the cleanup swaps the frame for
- * a blank page, and the effect puts the real address (kept in data-src) back when it's shown.
- * For a live stream that's what you want anyway: it rejoins at the current moment.
- */
-function useUnloadWhenHidden(ref: RefObject<HTMLIFrameElement | null>) {
-  useLayoutEffect(() => {
-    const frame = ref.current;
-    if (!frame) return;
-    const src = frame.dataset.src;
-    if (src && frame.getAttribute("src") !== src) frame.setAttribute("src", src);
-    return () => frame.setAttribute("src", "about:blank");
-  }, [ref]);
 }

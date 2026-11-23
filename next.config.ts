@@ -5,8 +5,12 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   images: {
-    // Photos from Unsplash (free licence). Only their photo paths are allowed.
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com", pathname: "/photo-**" }],
+    remotePatterns: [
+      // Photos from Unsplash (free licence). Only their photo paths are allowed.
+      { protocol: "https", hostname: "images.unsplash.com", pathname: "/photo-**" },
+      // YouTube video thumbnails, for the Watch pages.
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
+    ],
   },
   turbopack: {
     rules: {
