@@ -41,7 +41,12 @@ export async function getLiveState(): Promise<LiveState> {
 
 async function checkChannel(channelId: string, preview: string): Promise<LiveState> {
   "use cache";
-  cacheLife({ stale: 30, revalidate: 30, expire: 120 });
+  // YouTube is asked at most about every 30 seconds, however many visitors are checking
+  // (about 5,800 of the API's 10,000 daily units at worst). `expire` only just past
+  // `revalidate` means an answer older than that is never handed out while a fresh one is
+  // fetched: the next request waits for the fresh one instead, so the site learns a stream
+  // has started within about 30 seconds.
+  cacheLife({ stale: 30, revalidate: 30, expire: 31 });
 
   if (preview) {
     return {

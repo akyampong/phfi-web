@@ -6,12 +6,15 @@ import { useSyncExternalStore } from "react";
 export type LiveStatus = { live: boolean; title?: string };
 
 const OFFLINE: LiveStatus = { live: false };
-const POLL_MS = 60_000;
+/** How often an open page asks whether the channel is live (the server answers from a 30-second cache). */
+const POLL_MS = 15_000;
 
 /**
  * One live check for the whole page, however many components want to know: the first one
- * to subscribe starts it (asking straight away, then once a minute and whenever the tab
- * comes back into view), and it stops when the last one goes.
+ * to subscribe starts it (asking straight away, then every 15 seconds while the tab is in
+ * view, and again whenever the tab or window comes back into view or the connection comes
+ * back), and it stops when the last one goes. So the live signals appear on an open page
+ * when a stream starts, without anyone refreshing.
  */
 let status: LiveStatus | null = null;
 const listeners = new Set<() => void>();
@@ -38,12 +41,16 @@ function subscribe(listener: () => void) {
     void check();
     timer = setInterval(check, POLL_MS);
     document.addEventListener("visibilitychange", check);
+    window.addEventListener("focus", check);
+    window.addEventListener("online", check);
   }
   return () => {
     listeners.delete(listener);
     if (listeners.size === 0) {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", check);
+      window.removeEventListener("focus", check);
+      window.removeEventListener("online", check);
     }
   };
 }
