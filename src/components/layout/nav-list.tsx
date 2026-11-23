@@ -5,33 +5,29 @@ type NavListProps = {
   items: NavItem[];
   isLive: boolean;
   activeHref?: string | null;
-  variant?: "desktop" | "mobile";
+  variant?: "desktop" | "drawer";
 };
 
 /** Presentational list of main menu links. Used on the server and the client. */
 export function NavList({ items, isLive, activeHref = null, variant = "desktop" }: NavListProps) {
-  if (variant === "mobile") {
+  if (variant === "drawer") {
+    // Large links on the dark drawer; the current section is white, the rest grey.
     return (
-      <ul className="divide-y divide-rule border-y border-rule">
+      <ul className="flex flex-col gap-1">
         {items.map((item) => {
           const active = item.href === activeHref;
-          const live = isLive && item.href === "/live";
+          const live = isLive && item.showsLive;
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center justify-between py-4 font-serif text-2xl font-semibold ${
-                  active ? "text-brand" : "text-ink"
+                className={`flex items-center gap-3 py-1.5 text-[1.3rem] leading-snug transition-colors ${
+                  active ? "text-white" : "text-night-text/80 hover:text-white"
                 }`}
               >
-                <span className="flex items-center gap-3">
-                  {item.label}
-                  {live && <LiveBadge />}
-                </span>
-                <span aria-hidden className="text-base text-muted">
-                  →
-                </span>
+                {item.label}
+                {live && <LiveBadge />}
               </Link>
             </li>
           );
@@ -44,22 +40,30 @@ export function NavList({ items, isLive, activeHref = null, variant = "desktop" 
     <ul className="flex h-full items-stretch gap-7">
       {items.map((item) => {
         const active = item.href === activeHref;
-        const live = isLive && item.href === "/live";
+        const live = isLive && item.showsLive;
         return (
           <li key={item.href} className="flex">
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`relative flex items-center gap-1.5 text-[0.95rem] font-semibold transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:transition-colors ${
-                live
-                  ? "text-live"
-                  : active
-                    ? "text-brand after:bg-brand"
-                    : "text-ink after:bg-transparent hover:text-brand"
+              className={`group flex items-center gap-1.5 text-base font-normal transition-colors ${
+                live ? "text-live" : active ? "text-ink" : "text-body hover:text-ink"
               }`}
             >
               {live && <span aria-hidden className="animate-live size-2 rounded-full bg-live" />}
-              {item.label}
+              {/* The underline sits just under the label, not at the bottom of the header. */}
+              <span
+                // The underline grows out from the centre on hover, and stays for the current section
+                className={`relative after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-center after:rounded-full after:transition-[scale,background-color] after:duration-300 after:ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  live
+                    ? "after:scale-x-0"
+                    : active
+                      ? "after:scale-x-100 after:bg-ink"
+                      : "after:scale-x-0 after:bg-rule-strong group-hover:after:scale-x-100"
+                }`}
+              >
+                {item.label}
+              </span>
               {live && <span className="sr-only">(streaming now)</span>}
             </Link>
           </li>
@@ -71,7 +75,7 @@ export function NavList({ items, isLive, activeHref = null, variant = "desktop" 
 
 function LiveBadge() {
   return (
-    <span className="label-caps inline-flex items-center gap-1.5 rounded-full bg-live px-2 py-1 text-[0.6rem] text-white">
+    <span className="label-caps inline-flex items-center gap-1.5 rounded-squircle-xs bg-live px-2 py-1 text-[0.6rem] text-white">
       <span aria-hidden className="animate-live size-1.5 rounded-full bg-white" />
       Live now
     </span>

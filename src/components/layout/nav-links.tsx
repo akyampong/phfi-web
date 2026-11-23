@@ -7,7 +7,7 @@ import { NavList, findActiveHref } from "./nav-list";
 type NavLinksProps = {
   items: NavItem[];
   isLive: boolean;
-  variant?: "desktop" | "mobile";
+  variant?: "desktop" | "drawer";
 };
 
 /** Main menu links with the current section highlighted. Render inside <Suspense>. */

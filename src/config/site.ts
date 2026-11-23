@@ -3,6 +3,8 @@ export type NavItem = {
   href: string;
   /** Other path prefixes that should mark this item as active. */
   match?: string[];
+  /** Show the red live indicator on this item while a meeting is streaming. */
+  showsLive?: boolean;
 };
 
 export const siteConfig = {
@@ -13,10 +15,10 @@ export const siteConfig = {
 };
 
 export const mainNav: NavItem[] = [
-  { label: "Live", href: "/live" },
-  { label: "Watch", href: "/watch", match: ["/podcast"] },
+  { label: "Watch", href: "/watch", match: ["/live", "/podcast"], showsLive: true },
   { label: "Read", href: "/read", match: ["/topics", "/scripture"] },
   { label: "Connect", href: "/connect", match: ["/new", "/prayer", "/events"] },
+  { label: "Give", href: "/give" },
   { label: "About", href: "/about", match: ["/contact"] },
 ];
 
@@ -58,12 +60,61 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
 ];
 
 // TODO: confirm meeting start times and time zone. These are placeholders.
+/** The label shown to visitors, e.g. "Times are GMT". */
 export const meetingTimeZone = "GMT";
+/** The same zone as an IANA name, used to convert meeting times into each visitor's own time zone. */
+export const meetingTimeZoneId = "Etc/GMT";
 
-export const meetingSchedule: { name: string; when: string; time: string }[] = [
-  { name: "Tuesday Fellowship", when: "Every Tuesday", time: "7:00 PM" },
-  { name: "Thursday Fellowship", when: "Every Thursday", time: "7:00 PM" },
-  { name: "Midnight Fellowship", when: "Last Wednesday of the month", time: "Into Thursday" },
+/** Abstract artwork shown beside a meeting in the menu (see meeting-art.tsx). */
+export type MeetingArt = "sunset" | "together" | "midnight";
+
+export type Meeting = {
+  name: string;
+  /** Day of the week: 0 is Sunday, 1 Monday … 6 Saturday. */
+  weekday: number;
+  /** "weekly" meets every week; "last" meets on the last such weekday of the month. */
+  frequency: "weekly" | "last";
+  /** Short description shown under the name, e.g. "Tuesdays, 7:00 PM". */
+  summary: string;
+  /** Start time in the meeting time zone, 24-hour "HH:MM". Leave out when there is no fixed start. */
+  startTime?: string;
+  /** How long it runs, for calendar entries. */
+  durationMinutes: number;
+  /** One or two sentences about the meeting, for the home page. */
+  description: string;
+  art: MeetingArt;
+};
+
+export const meetingSchedule: Meeting[] = [
+  {
+    name: "Tuesday Fellowship",
+    weekday: 2,
+    frequency: "weekly",
+    summary: "Tuesdays, 7:00 PM",
+    startTime: "19:00",
+    durationMinutes: 90, // TODO: confirm
+    description: "Worship, prayer and teaching through a series, book by book. The heart of our week.",
+    art: "sunset",
+  },
+  {
+    name: "Thursday Fellowship",
+    weekday: 4,
+    frequency: "weekly",
+    summary: "Thursdays, 7:00 PM",
+    startTime: "19:00",
+    durationMinutes: 90, // TODO: confirm
+    description: "A lighter midweek gathering: a short word, open conversation and praying for one another.",
+    art: "together",
+  },
+  {
+    name: "Jericho Hour",
+    weekday: 3,
+    frequency: "last",
+    summary: "Last Wednesday of the month, into Thursday",
+    durationMinutes: 120,
+    description: "Our end-of-month prayer meeting: two hours of prayer together.",
+    art: "midnight",
+  },
 ];
 
 /** Add each account as it is confirmed. Only links listed here are shown. */

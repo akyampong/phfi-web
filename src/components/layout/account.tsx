@@ -1,47 +1,36 @@
 import Link from "next/link";
 import { getSession } from "@/lib/session";
-import { SignOutButton, UserMenu } from "./user-menu";
+import { SignOutButton } from "./sign-out-button";
 
-/** Sign-in link or the signed-in user's menu. Render inside <Suspense>. */
-export async function Account({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
+/** Outlined button style for the row at the foot of the menu drawer. */
+export const drawerButtonClass =
+  "label-caps inline-flex h-11 items-center justify-center rounded-squircle-xs text-[0.68rem] text-night-text ring-1 ring-white/25 ring-inset transition-colors hover:bg-white/10 hover:text-white";
+
+/** "Sign in" for visitors, "Sign out" for members. Render inside <Suspense>. */
+export async function AccountButton() {
   const session = await getSession();
 
-  if (!session) {
-    return variant === "desktop" ? (
-      <Link
-        href="/sign-in"
-        className="inline-flex h-10 items-center px-3 text-[0.95rem] font-semibold text-ink hover:text-brand"
-      >
-        Sign in
-      </Link>
-    ) : (
-      <Link
-        href="/sign-in"
-        className="inline-flex h-12 items-center justify-center rounded-md border border-rule-strong text-base font-semibold text-ink"
-      >
-        Sign in
-      </Link>
-    );
-  }
-
-  const { name, email, image } = session.user;
-
-  if (variant === "mobile") {
-    return (
-      <div className="flex items-center justify-between gap-4 border-t border-rule pt-6">
-        <div className="min-w-0">
-          <p className="truncate font-semibold text-ink">{name}</p>
-          <p className="truncate text-sm text-muted">{email}</p>
-        </div>
-        <SignOutButton className="h-10 shrink-0 rounded-md border border-rule-strong px-4 text-sm font-semibold text-ink" />
-      </div>
-    );
-  }
-
-  return <UserMenu name={name} email={email} image={image ?? null} />;
+  return session ? (
+    <SignOutButton className={drawerButtonClass} />
+  ) : (
+    <Link href="/sign-in" className={drawerButtonClass}>
+      Sign in
+    </Link>
+  );
 }
 
-/** Same footprint as the desktop "Sign in" link, so the header does not shift. */
-export function AccountPlaceholder() {
-  return <span aria-hidden className="inline-block h-10 w-[4.25rem]" />;
+/** Holds the space while the session is checked, so the row does not shift. */
+export function AccountButtonPlaceholder() {
+  return <span aria-hidden className={`${drawerButtonClass} opacity-50`} />;
+}
+
+/** "Signed in as …" above the button row, for members only. Render inside <Suspense>. */
+export async function SignedInAs() {
+  const session = await getSession();
+  if (!session) return null;
+  return (
+    <p className="mb-3 truncate text-sm text-night-muted">
+      Signed in as <span className="text-night-text">{session.user.name}</span>
+    </p>
+  );
 }

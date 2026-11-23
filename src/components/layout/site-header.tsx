@@ -1,70 +1,77 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
-import { mainNav } from "@/config/site";
-import { getLiveStatus } from "@/lib/live";
-import { Account, AccountPlaceholder } from "./account";
-import { MobileMenu } from "./mobile-menu";
+import { mainNav, meetingSchedule, siteConfig } from "@/config/site";
+import { AccountButton, AccountButtonPlaceholder, SignedInAs, drawerButtonClass } from "./account";
+import { LiveIndicator } from "./live-indicator";
+import { LiveNav } from "./live-nav";
 import { NavLinks } from "./nav-links";
 import { NavList } from "./nav-list";
+import { SearchBar } from "./search-bar";
+import { MenuMeetings } from "./menu-meetings";
+import { DrawerSection, SiteMenu } from "./site-menu";
+
+// Give has its own button at the foot of the drawer, so the drawer's link list leaves it out.
+const drawerNav = mainNav.filter((item) => item.href !== "/give");
 
 export function SiteHeader() {
-  const isLive = getLiveStatus();
-
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper">
-      <div className="container-page flex h-16 items-center lg:h-[76px]">
-        <Link href="/" aria-label="Purpose House Fellowship International, home" className="shrink-0">
-          <Logo preload />
-        </Link>
+    // Named so it stays still while pages cross-fade beneath it
+    <header className="sticky top-0 z-40 bg-paper" style={{ viewTransitionName: "site-header" }}>
+      {/* Three columns on desktop: the equal outer columns keep the nav exactly centred. */}
+      <div className="container-page grid h-14 grid-cols-[1fr_auto] lg:h-16 lg:grid-cols-[1fr_auto_1fr]">
+        <div className="flex items-center gap-4 self-center justify-self-start lg:gap-5">
+          <Link href="/" aria-label="Purpose House Fellowship International, home">
+            <Logo preload />
+          </Link>
+          {/* While the channel is streaming: a red "Live" tag that opens /live */}
+          <Suspense fallback={null}>
+            <LiveIndicator />
+          </Suspense>
+        </div>
 
-        <nav aria-label="Main" className="ml-12 hidden self-stretch lg:block">
-          <Suspense fallback={<NavList items={mainNav} isLive={isLive} />}>
-            <NavLinks items={mainNav} isLive={isLive} />
+        {/* The Live tag beside the logo signals a stream, so the menu itself stays plain. */}
+        <nav aria-label="Main" className="hidden lg:block">
+          <Suspense fallback={<NavList items={mainNav} isLive={false} />}>
+            <NavLinks items={mainNav} isLive={false} />
           </Suspense>
         </nav>
 
-        <div className="ml-auto flex items-center gap-1 sm:gap-2">
-          <Link
-            href="/search"
-            aria-label="Search"
-            className="inline-flex size-10 items-center justify-center rounded-md text-ink hover:bg-canvas hover:text-brand"
-          >
-            <Search className="size-5" />
-          </Link>
+        <div className="flex items-center gap-2 self-center justify-self-end">
+          <SearchBar id="header-search" className="hidden w-52 lg:block xl:w-64" />
 
-          <div className="hidden lg:block">
-            <Suspense fallback={<AccountPlaceholder />}>
-              <Account />
-            </Suspense>
-          </div>
+          <SiteMenu>
+            <DrawerSection className="flex flex-col gap-8">
+              {/* On desktop the search bar is already in the header. */}
+              <SearchBar id="menu-search" tone="onDark" className="lg:hidden" />
+              <nav aria-label="Main">
+                <Suspense fallback={<NavList items={drawerNav} isLive={false} variant="drawer" />}>
+                  <LiveNav items={drawerNav} variant="drawer" />
+                </Suspense>
+              </nav>
+            </DrawerSection>
 
-          <Link
-            href="/give"
-            className="ml-1 hidden h-10 items-center rounded-md bg-brand px-5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-brand-strong sm:inline-flex"
-          >
-            Give
-          </Link>
+            <DrawerSection>
+              <MenuMeetings meetings={meetingSchedule} />
+            </DrawerSection>
 
-          <MobileMenu>
-            <nav aria-label="Main">
-              <Suspense fallback={<NavList items={mainNav} isLive={isLive} variant="mobile" />}>
-                <NavLinks items={mainNav} isLive={isLive} variant="mobile" />
-              </Suspense>
-            </nav>
-            <div className="flex flex-col gap-3">
-              <Link
-                href="/give"
-                className="inline-flex h-12 items-center justify-center rounded-md bg-brand text-base font-semibold text-white"
-              >
-                Give
-              </Link>
-              <Suspense fallback={null}>
-                <Account variant="mobile" />
-              </Suspense>
-            </div>
-          </MobileMenu>
+            <DrawerSection className="flex flex-col gap-8">
+              <p className="text-[0.92rem] leading-[1.75] text-night-text">{siteConfig.description}</p>
+              <div>
+                <Suspense fallback={null}>
+                  <SignedInAs />
+                </Suspense>
+                <div className="grid grid-cols-2 gap-2">
+                  <Suspense fallback={<AccountButtonPlaceholder />}>
+                    <AccountButton />
+                  </Suspense>
+                  <Link href="/give" className={drawerButtonClass}>
+                    Give
+                  </Link>
+                </div>
+              </div>
+            </DrawerSection>
+          </SiteMenu>
         </div>
       </div>
     </header>

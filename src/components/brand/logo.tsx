@@ -14,31 +14,23 @@ export function Logo({ tone = "onLight", preload = false }: LogoProps) {
   const onDark = tone === "onDark";
 
   return (
-    <span className="flex items-center gap-2.5">
+    <span className="flex items-center gap-1.5">
       <Image
         src={onDark ? "/brand/phfi-icon-white.svg" : "/brand/phfi-icon.svg"}
         alt=""
-        width={46}
-        height={36}
+        width={574}
+        height={450}
         preload={preload}
         unoptimized
-        className="h-9 w-auto"
+        className="h-7 w-auto"
       />
-      <span className="flex flex-col leading-none">
-        <span
-          className={`font-serif text-[1.15rem] font-semibold tracking-tight ${
-            onDark ? "text-white" : "text-ink"
-          }`}
-        >
-          Purpose House
-        </span>
-        <span
-          className={`mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] ${
-            onDark ? "text-night-muted" : "text-muted"
-          }`}
-        >
-          Fellowship International
-        </span>
+      {/* Trim the line box to the capital letters, so the word centres on the icon. */}
+      <span
+        className={`text-[1.35rem] font-bold leading-none tracking-tight [text-box:trim-both_cap_alphabetic] ${
+          onDark ? "text-white" : "text-ink"
+        }`}
+      >
+        PHFI
       </span>
     </span>
   );
