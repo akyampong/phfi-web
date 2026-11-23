@@ -52,8 +52,8 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     title: "About",
     links: [
       { label: "Our story", href: "/about" },
-      { label: "What we believe", href: "/about/beliefs" },
-      { label: "Leadership", href: "/about/leadership" },
+      { label: "What we believe", href: "/about#beliefs" },
+      { label: "Leadership", href: "/about#leadership" },
       { label: "Give", href: "/give" },
     ],
   },

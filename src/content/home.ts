@@ -14,7 +14,7 @@ import { meetingLook, meetingSchedule } from "@/config/site";
  * Asks Unsplash for a 2000px copy rather than the multi-megabyte original, so Next's
  * image resizing stays quick.
  */
-function unsplash(id: string, alt: string, page: string): Photo {
+export function unsplash(id: string, alt: string, page: string): Photo {
   return {
     src: `https://images.unsplash.com/photo-${id}?w=2000&q=80&fm=jpg&fit=max`,
     alt,
