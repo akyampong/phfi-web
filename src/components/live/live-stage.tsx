@@ -118,7 +118,7 @@ function Offline() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/watch"
-            className="inline-flex h-12 items-center gap-2 rounded-squircle-xs bg-white px-6 text-[0.95rem] font-semibold text-ink transition-colors hover:bg-white/90"
+            className="inline-flex h-11 items-center gap-2 rounded-squircle-xs bg-white px-5 text-[0.95rem] font-semibold text-ink transition-colors hover:bg-white/90"
           >
             <Play aria-hidden className="size-4 fill-current" />
             Watch the latest recap
@@ -128,7 +128,7 @@ function Offline() {
               href={`https://www.youtube.com/channel/${channelId}?sub_confirmation=1`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-12 items-center gap-2 rounded-squircle-xs px-6 text-[0.95rem] font-semibold text-white ring-1 ring-white/40 ring-inset transition-colors hover:ring-white"
+              className="inline-flex h-11 items-center gap-2 rounded-squircle-xs px-5 text-[0.95rem] font-semibold text-white ring-1 ring-white/40 ring-inset transition-colors hover:ring-white"
             >
               Get notified on YouTube
               <ArrowUpRight aria-hidden className="size-4" />

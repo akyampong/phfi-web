@@ -68,6 +68,17 @@ export const meetingTimeZoneId = "Etc/GMT";
 /** Abstract artwork shown beside a meeting in the menu (see meeting-art.tsx). */
 export type MeetingArt = "sunset" | "together" | "midnight";
 
+/**
+ * How each meeting looks wherever it appears (its bento tile, its thumbnail in the menu
+ * drawer): one flat colour with one large tone-on-tone shape (see TonalArtwork). Change a
+ * meeting's look here and every place that shows it follows.
+ */
+export const meetingLook: Record<MeetingArt, { colour: string; motif: "sunset" | "orbits" | "moon" }> = {
+  sunset: { colour: "#c2410c", motif: "sunset" },
+  together: { colour: "#be185d", motif: "orbits" },
+  midnight: { colour: "#4a2272", motif: "moon" },
+};
+
 export type Meeting = {
   name: string;
   /** Day of the week: 0 is Sunday, 1 Monday … 6 Saturday. */

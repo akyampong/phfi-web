@@ -119,11 +119,14 @@ export function TonalArtwork({
   motif,
   colour,
   uid,
+  centred = false,
   className = "",
 }: {
   motif: Exclude<Motif, "waves" | "arch">;
   colour: string;
   uid: string;
+  /** Sit the shape in the middle, a little larger (for small squares like thumbnails), instead of off to the right. */
+  centred?: boolean;
   className?: string;
 }) {
   const tone = "rgba(255,255,255,0.11)";
@@ -139,8 +142,13 @@ export function TonalArtwork({
   return (
     <svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid slice" aria-hidden className={className}>
       <rect width="160" height="120" fill={colour} />
-      {/* 1.5 times larger, its centre moved from (80, 60) to (112, 60) */}
-      <g transform="translate(112 60) scale(1.5) translate(-80 -60)">
+      {/* Off to the right: 1.5 times larger, its centre moved from (80, 60) to (112, 60).
+          Centred: 1.2 times larger, staying in the middle. */}
+      <g
+        transform={
+          centred ? "translate(80 60) scale(1.2) translate(-80 -60)" : "translate(112 60) scale(1.5) translate(-80 -60)"
+        }
+      >
         <Motif p={p} sky={colour} uid={uid} />
       </g>
     </svg>

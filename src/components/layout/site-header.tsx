@@ -8,6 +8,7 @@ import { LiveNav } from "./live-nav";
 import { NavLinks } from "./nav-links";
 import { NavList } from "./nav-list";
 import { SearchBar } from "./search-bar";
+import { SearchShortcut } from "./search-shortcut";
 import { MenuMeetings } from "./menu-meetings";
 import { DrawerSection, SiteMenu } from "./site-menu";
 
@@ -38,6 +39,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2 self-center justify-self-end">
+          {/* ⌘/ (Ctrl+/) jumps into search from anywhere */}
+          <SearchShortcut />
           <SearchBar id="header-search" className="hidden w-52 lg:block xl:w-64" />
 
           <SiteMenu>

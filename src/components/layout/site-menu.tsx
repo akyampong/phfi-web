@@ -8,17 +8,40 @@ import { X } from "lucide-react";
  * that slides in over the page from the right (the whole screen on phones).
  * The drawer stays in the page when closed, off-screen and inert, so it can animate.
  */
+/** The event the search shortcut sends to open the menu with its search field focused. */
+export const OPEN_MENU_SEARCH = "phfi:open-menu-search";
+
 export function SiteMenu({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const openButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  /** Set when the menu is opened by the search shortcut, so it focuses search, not ×. */
+  const focusSearchRef = useRef(false);
+
+  // The ⌘/ shortcut (search-shortcut.tsx) opens the menu "for search" on narrow screens.
+  useEffect(() => {
+    const openForSearch = () => {
+      focusSearchRef.current = true;
+      setOpen(true);
+    };
+    window.addEventListener(OPEN_MENU_SEARCH, openForSearch);
+    return () => window.removeEventListener(OPEN_MENU_SEARCH, openForSearch);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
     const openButton = openButtonRef.current;
-    closeButtonRef.current?.focus();
+    const search = focusSearchRef.current ? document.getElementById("menu-search") : null;
+    focusSearchRef.current = false;
+    // Only if it's showing (the menu hides its search field on wide screens, where the header has one)
+    if (search instanceof HTMLInputElement && search.getClientRects().length > 0) {
+      search.focus();
+      search.select();
+    } else {
+      closeButtonRef.current?.focus();
+    }
 
     const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -83,8 +106,11 @@ export function SiteMenu({ children }: { children: ReactNode }) {
             if ((e.target as HTMLElement).closest("a")) setOpen(false);
           }}
           onSubmit={() => setOpen(false)}
-          className={`absolute inset-y-0 right-0 flex w-full flex-col overflow-y-auto bg-night text-night-text transition-[translate,visibility] duration-300 ease-out motion-reduce:transition-none sm:w-[420px] [&_:focus-visible]:outline-white ${
-            open ? "visible translate-x-0" : "invisible translate-x-full"
+          // Opening: it becomes visible at once (only the slide is animated), so focus can move
+          // into it straight away; a hidden element can't take focus. Closing: visibility waits
+          // for the slide to finish, so it slides out before it disappears.
+          className={`absolute inset-y-0 right-0 flex w-full flex-col overflow-y-auto bg-night text-night-text duration-300 ease-out motion-reduce:transition-none sm:w-[420px] [&_:focus-visible]:outline-white ${
+            open ? "visible translate-x-0 transition-[translate]" : "invisible translate-x-full transition-[translate,visibility]"
           }`}
         >
           <div className="flex h-14 shrink-0 items-center justify-end px-5 sm:px-8 lg:h-16">

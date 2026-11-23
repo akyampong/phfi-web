@@ -10,12 +10,10 @@ export function WaysToJoin({ ways }: { ways: Way[] }) {
   return (
     <section aria-labelledby="ways-title" className="mx-auto w-full max-w-[75rem]">
       <Reveal className="text-center">
-        <h2 id="ways-title" className="text-headline text-ink text-balance">
-          Your place at Purpose House
+        {/* The title says it all, so there's no line under it */}
+        <h2 id="ways-title" className="mx-auto max-w-[24ch] text-headline text-ink text-balance">
+          Join us live, catch up when you can, or read through the week
         </h2>
-        <p className="mx-auto mt-4 max-w-[50ch] text-lead text-muted text-balance">
-          Join us live, catch up when you can, read through the week, or get to know the family, wherever you are in the world.
-        </p>
       </Reveal>
 
       <ul className="mt-12 grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-x-16">

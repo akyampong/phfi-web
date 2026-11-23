@@ -36,7 +36,7 @@
     rounded-squircle-lg  big surfaces: the hero, This week, the live player   32 → 40px
     rounded-squircle-md  cards: bento tiles, the latest-message video, next steps  28px
     rounded-squircle-sm  small photos: the Recent cards                            20px
-    rounded-squircle-xs  buttons, fields, small badges                             10px
+    rounded-squircle-xs  buttons, fields, small badges                             14px
     rounded-card         plain 12px corners, for anything small and plain
     rounded-ui           plain 6px corners (the fallback size for rounded-squircle-xs)
   */
@@ -131,10 +131,10 @@
 }
 
 @utility rounded-squircle-xs {
-  border-radius: 6px;
+  border-radius: 8px;
   @supports (corner-shape: squircle) {
     corner-shape: squircle;
-    border-radius: 10px;
+    border-radius: 14px;
   }
 }
 

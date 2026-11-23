@@ -7,7 +7,7 @@
  */
 import type { ArtSpec } from "@/components/art/artwork";
 import type { Photo } from "@/components/art/cover";
-import { meetingSchedule } from "@/config/site";
+import { meetingLook, meetingSchedule } from "@/config/site";
 
 /**
  * A free-licence Unsplash photo, by its ID and its page slug (kept for credit).
@@ -389,8 +389,7 @@ export const bentoTiles: BentoTile[] = [
     detail: meetingSummary("Tuesday Fellowship"),
     action: "Learn more",
     href: "/live#schedule",
-    motif: "sunset",
-    colour: "#c2410c",
+    ...meetingLook.sunset,
   },
   {
     label: "Thursday Fellowship",
@@ -399,8 +398,7 @@ export const bentoTiles: BentoTile[] = [
     detail: meetingSummary("Thursday Fellowship"),
     action: "Learn more",
     href: "/live#schedule",
-    motif: "orbits",
-    colour: "#be185d",
+    ...meetingLook.together,
   },
   {
     label: "Jericho Hour",
@@ -409,8 +407,7 @@ export const bentoTiles: BentoTile[] = [
     detail: meetingSummary("Jericho Hour"),
     action: "Learn more",
     href: "/live#schedule",
-    motif: "moon",
-    colour: "#4a2272",
+    ...meetingLook.midnight,
   },
   {
     label: "Meeting times",

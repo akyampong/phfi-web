@@ -7,7 +7,7 @@ import { SignOutButton } from "./sign-out-button";
  * (the hero's): Give is solid white, the main action; Sign in / Sign out is frosted glass.
  */
 const drawerButton =
-  "inline-flex h-12 items-center justify-center rounded-squircle-xs px-5 text-[0.95rem] font-semibold transition-[background-color,scale] duration-200 active:scale-[0.98]";
+  "inline-flex h-11 items-center justify-center rounded-squircle-xs px-4 text-[0.95rem] font-semibold transition-[background-color,scale] duration-200 active:scale-[0.98]";
 export const drawerButtonPrimary = `${drawerButton} bg-white text-ink hover:bg-white/90`;
 export const drawerButtonSecondary = `${drawerButton} bg-white/12 text-white backdrop-blur-md hover:bg-white/20`;
 

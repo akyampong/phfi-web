@@ -59,12 +59,14 @@ function ContentCard({ item }: { item: ContentItem }) {
       <span className="block sm:mt-5">
         {/* On phones the picture is too small for the label, so it moves above the title */}
         <span className="mb-1 block text-xs font-medium text-muted sm:hidden">{kind}</span>
+        {/* Just the title, then the date, then the summary: no scripture line, so there are
+            only three levels of text on a card */}
         <h3 className="text-title text-ink">
           {/* Underline draws in from the left while the card is hovered */}
           <span className={groupUnderline}>{item.title}</span>
         </h3>
-        {item.subtitle && <p className="mt-1 text-[0.95rem] font-medium text-body">{item.subtitle}</p>}
-        <p className="label-caps mt-2 text-[0.66rem] text-muted sm:mt-3">
+        {/* Date and length in capitals with normal letter spacing: "NOV 10, 2026 · 48 MIN" */}
+        <p className="mt-2 text-xs font-medium uppercase text-muted">
           {formatDate(item.date)} · {item.length}
         </p>
         <p className="mt-3 line-clamp-3 hidden text-[0.95rem] leading-relaxed text-body sm:block">{item.excerpt}</p>

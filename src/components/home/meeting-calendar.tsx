@@ -146,7 +146,7 @@ export function MeetingCalendar({ colour }: { colour: string }) {
           href={now ? googleCalendarUrl() : "/calendar.ics"}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-10 items-center gap-2 rounded-squircle-xs bg-white px-4 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
+          className="inline-flex h-9 items-center gap-2 rounded-squircle-xs bg-white px-3.5 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
         >
           {/* Google Calendar's own logo (from Google's servers), so it's clear where this goes */}
           <Image src="/assets/google-calendar.png" alt="" width={20} height={20} className="size-5" />

@@ -34,7 +34,7 @@ export function NextSteps({ steps }: { steps: typeof NextStepsData }) {
                 <span className="mt-3 block max-w-[16ch] text-[clamp(1.5rem,1.25rem+0.8vw,1.875rem)] font-bold leading-[1.12] tracking-[-0.02em]">
                   {step.title}
                 </span>
-                <span className="mt-6 inline-flex h-10 items-center rounded-squircle-xs bg-white px-5 text-sm font-semibold text-ink transition-colors group-hover:bg-white/90">
+                <span className="mt-6 inline-flex h-9 items-center rounded-squircle-xs bg-white px-4 text-sm font-semibold text-ink transition-colors group-hover:bg-white/90">
                   {step.action}
                 </span>
               </span>

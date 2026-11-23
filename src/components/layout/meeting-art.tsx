@@ -1,12 +1,5 @@
-import { Artwork, type ArtSpec } from "@/components/art/artwork";
-import type { MeetingArt as MeetingArtName } from "@/config/site";
-
-/** Which artwork each meeting uses. */
-export const meetingArtwork: Record<MeetingArtName, ArtSpec> = {
-  sunset: { motif: "sunset", palette: "ember" },
-  together: { motif: "orbits", palette: "blush" },
-  midnight: { motif: "moon", palette: "dusk" },
-};
+import { TonalArtwork } from "@/components/art/artwork";
+import { meetingLook, type MeetingArt as MeetingArtName } from "@/config/site";
 
 type MeetingArtProps = {
   art: MeetingArtName;
@@ -15,7 +8,12 @@ type MeetingArtProps = {
   className?: string;
 };
 
-/** A meeting's artwork, cropped to whatever box it is given. */
+/**
+ * A meeting's artwork, cropped to whatever box it is given: the same flat colour and
+ * tone-on-tone shape as the meeting's bento tile (both read meetingLook in config/site.ts).
+ */
 export function MeetingArt({ art, uid, className = "" }: MeetingArtProps) {
-  return <Artwork {...meetingArtwork[art]} uid={uid} className={className} />;
+  const { colour, motif } = meetingLook[art];
+  // Centred, as thumbnails are small squares (the bento tiles set the shape off to the side)
+  return <TonalArtwork motif={motif} colour={colour} uid={uid} centred className={className} />;
 }

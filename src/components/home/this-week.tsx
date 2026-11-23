@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { buttonPrimary, groupUnderline } from "@/components/ui/styles";
+import { bodyText, buttonPrimary, groupUnderline } from "@/components/ui/styles";
 import type { ThisWeek as ThisWeekData } from "@/content/home";
 import { Reveal } from "@/components/ui/reveal";
 import { VerseActions } from "./verse-actions";
@@ -87,7 +87,7 @@ export function ThisWeek({ week }: { week: ThisWeekData }) {
                 <span aria-hidden className="w-6 shrink-0 text-[0.95rem] font-semibold tabular-nums text-muted">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <p className="text-[1.0625rem] leading-[1.65] text-body">{point}</p>
+                <p className={bodyText}>{point}</p>
               </li>
             ))}
           </ol>

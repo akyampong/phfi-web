@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { Cover } from "@/components/art/cover";
-import { buttonPrimary, buttonSecondary } from "@/components/ui/styles";
+import { bodyText, buttonPrimary, buttonSecondary } from "@/components/ui/styles";
 import type { ContentItem } from "@/content/home";
 import { formatDate } from "@/lib/format";
 
@@ -31,7 +31,7 @@ export function FeaturedMessage({ message }: { message: ContentItem }) {
             <Play className="ml-0.5 size-5 fill-current sm:size-6" />
           </span>
         </span>
-        <span aria-hidden className="label-caps absolute bottom-0 left-0 p-5 text-white/90 sm:p-8">
+        <span aria-hidden className="absolute bottom-0 left-0 p-5 text-xs font-medium uppercase text-white/90 sm:p-8">
           {message.meeting}
           <span className="hidden sm:inline"> · {message.length}</span>
         </span>
@@ -43,7 +43,7 @@ export function FeaturedMessage({ message }: { message: ContentItem }) {
           {message.title}
         </h2>
         {message.subtitle && <p className="mt-5 text-lg font-medium text-ink">{message.subtitle}</p>}
-        <p className="mt-5 max-w-[40ch] text-lead text-body">{message.excerpt}</p>
+        <p className={`mt-5 max-w-[40ch] ${bodyText}`}>{message.excerpt}</p>
         <p className="mt-6 text-sm text-muted">
           {message.meeting} · {formatDate(message.date)}
         </p>
