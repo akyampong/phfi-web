@@ -242,9 +242,16 @@ export type HeroSlide = {
   id: string;
   /** Small label above the headline, e.g. "New series". */
   eyebrow: string;
-  /** The headline. Keep it short: two to six words. */
+  /**
+   * The headline, in two lines: put a line break (\n) where the second line starts. On wide
+   * screens each slide shows exactly these two lines, so the slides line up as they change;
+   * on narrow screens the break is ignored and the words wrap naturally.
+   */
   headline: string;
-  /** One or two sentences beside the headline. */
+  /**
+   * One or two sentences beside the headline, also in two lines split by \n. Keep each line
+   * to about 45 characters so it fits the column on wide screens.
+   */
   text: string;
   /**
    * The main button. With `liveOnly`, it shows only while a stream is on (with a pulsing red
@@ -259,8 +266,8 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "welcome",
     eyebrow: "Purpose House Fellowship International",
-    headline: "A home for your faith, wherever you are",
-    text: "Live fellowship every Tuesday and Thursday: worship, prayer and the Bible, together online.",
+    headline: "A home for your faith,\nwherever you are",
+    text: "Live fellowship every Tuesday and Thursday:\nworship, prayer and the Bible, together online.",
     primary: { label: "Join us live", href: "/live", liveOnly: true },
     secondary: { label: "New here?", href: "/new" },
     photo: {
@@ -271,8 +278,8 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "building-capacity",
     eyebrow: "This month’s series",
-    headline: "Building Capacity",
-    text: "Our series for November. Catch up on every message so far, and join us live for the rest of the month.",
+    headline: "Building\nCapacity",
+    text: "Our series for November. Catch up on every\nmessage, then join us live for the rest.",
     primary: { label: "Watch the series", href: "/watch/series/building-capacity" },
     secondary: { label: "Latest message", href: "/watch/faith-that-waits" },
     // TODO: swap for the series artwork when there is one.
@@ -285,8 +292,8 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "jericho-hour",
     eyebrow: "End of the month",
-    headline: "Jericho Hour",
-    text: "Our end-of-month prayer meeting: two hours of prayer together, to close the month well.",
+    headline: "Jericho\nHour",
+    text: "Our end-of-month prayer meeting: two hours\nof prayer together, to close the month well.",
     primary: { label: "See meeting times", href: "/live#schedule" },
     secondary: { label: "Learn more", href: "/connect" },
     photo: {

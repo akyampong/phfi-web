@@ -208,7 +208,7 @@ function Slide({
     <div
       role="group"
       aria-roledescription="slide"
-      aria-label={`${position} of ${count}: ${slide.headline}`}
+      aria-label={`${position} of ${count}: ${oneLine(slide.headline)}`}
       aria-hidden={!active}
       inert={!active}
       data-active={active}
@@ -233,9 +233,10 @@ function Slide({
       <span aria-hidden className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/70 via-black/30 to-black/0" />
 
       {/* The words, gathered at the bottom: the headline on the left; the line about it and
-          the two buttons on the right from lg up (stacked under it on smaller screens).
+          the two buttons on the right from xl (1280px) up, stacked under it on smaller screens,
+          where side by side would squeeze the headline onto three lines.
           The bottom padding leaves room for the loader. */}
-      <div className="relative mt-auto flex flex-col gap-7 px-6 pb-20 text-white sm:px-10 sm:pb-24 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:px-16 lg:pb-28">
+      <div className="relative mt-auto flex flex-col gap-7 px-6 pb-20 text-white sm:px-10 sm:pb-24 lg:px-16 lg:pb-28 xl:flex-row xl:items-end xl:justify-between xl:gap-16">
         {/* Each .hero-rise part fades up in turn when the slide comes in; --d is its delay in ms */}
         <div className="min-w-0">
           <p className="hero-rise text-sm font-medium text-white/75" style={{ "--d": 150 } as CSSProperties}>
@@ -243,13 +244,16 @@ function Slide({
           </p>
           <h2
             style={{ "--d": 260 } as CSSProperties}
-            className="hero-rise mt-3 max-w-[15ch] text-[clamp(2.25rem,1.35rem+2.8vw,4.5rem)] font-normal text-white leading-[1.02] tracking-[-0.035em] text-balance">
+            // From lg up, the line break in the copy is kept, so every slide's headline is the
+            // same two lines; below that it wraps naturally within 15 characters
+            className="hero-rise mt-3 max-w-[15ch] text-[clamp(2.25rem,1.35rem+2.8vw,4.5rem)] font-normal text-white leading-[1.02] tracking-[-0.035em] text-balance lg:max-w-none lg:whitespace-pre-line">
             {slide.headline}
           </h2>
         </div>
 
-        <div className="lg:max-w-[28rem] lg:shrink-0">
-          <p className="hero-rise max-w-[38ch] text-[clamp(1.0625rem,0.98rem+0.3vw,1.25rem)] leading-relaxed text-white/85" style={{ "--d": 420 } as CSSProperties}>
+        {/* Wide enough on lg for each of the description's two lines (about 45 characters) */}
+        <div className="lg:max-w-[31rem] xl:shrink-0">
+          <p className="hero-rise max-w-[38ch] text-[clamp(1.0625rem,0.98rem+0.3vw,1.25rem)] leading-relaxed text-white/85 lg:max-w-none lg:whitespace-pre-line" style={{ "--d": 420 } as CSSProperties}>
             {slide.text}
           </p>
           {/* The padding widens the area that counts as "close to the buttons" by 32px on every
@@ -344,4 +348,9 @@ function useTabVisible() {
     () => document.visibilityState === "visible",
     () => true,
   );
+}
+
+/** The copy's line breaks are for the layout; screen readers get the words on one line. */
+function oneLine(text: string) {
+  return text.replace(/\s*\n\s*/g, " ");
 }
