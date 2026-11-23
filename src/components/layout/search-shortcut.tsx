@@ -55,7 +55,7 @@ export function SearchShortcutHint({ className = "" }: { className?: string }) {
     // sit evenly inside one another (5px plain corners where squircles aren't supported)
     <kbd
       aria-hidden
-      className={`pointer-events-none flex h-7 items-center rounded-[5px] bg-ink px-2 font-sans text-[0.8125rem] font-semibold leading-none text-white supports-[corner-shape:squircle]:rounded-[10px] supports-[corner-shape:squircle]:[corner-shape:squircle] ${className}`}
+      className={`pointer-events-none flex h-7 items-center rounded-[5px] bg-ink px-2 font-sans text-[0.8125rem] font-semibold leading-none text-paper supports-[corner-shape:squircle]:rounded-[10px] supports-[corner-shape:squircle]:[corner-shape:squircle] ${className}`}
     >
       {apple ? "⌘ /" : "Ctrl /"}
     </kbd>

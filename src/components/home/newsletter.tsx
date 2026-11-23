@@ -42,7 +42,7 @@ export function Newsletter() {
           />
           <button
             type="submit"
-            className="h-11 shrink-0 cursor-pointer rounded-squircle-xs bg-white px-5 text-[0.95rem] font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
+            className="h-11 shrink-0 cursor-pointer rounded-squircle-xs bg-white px-5 text-[0.95rem] font-semibold text-coal transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
           >
             Subscribe
           </button>

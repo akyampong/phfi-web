@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 /**
  * The live page: only while a stream is on (otherwise LiveStage sends visitors to the meeting
- * calendar). A dark theatre for the stream, full width under the header.
+ * calendar). Full width under the header, in the site's light or dark mode.
  */
 export default function LivePage() {
   return (
     <PageTransition>
-      <div className="min-h-[calc(100svh-3.5rem)] bg-night text-white lg:min-h-[calc(100svh-4rem)]">
+      <div className="min-h-[calc(100svh-3.5rem)] lg:min-h-[calc(100svh-4rem)]">
         <Suspense fallback={<LiveStageSkeleton />}>
           <LiveStage />
         </Suspense>

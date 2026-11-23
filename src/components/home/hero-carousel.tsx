@@ -10,7 +10,7 @@ import { useLiveStatus } from "@/lib/live-status";
 const SLIDE_MS = 7000;
 
 const solidButton =
-  "inline-flex h-10 items-center justify-center rounded-squircle-xs bg-white px-4 text-[0.95rem] font-medium text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]";
+  "inline-flex h-10 items-center justify-center rounded-squircle-xs bg-white px-4 text-[0.95rem] font-medium text-coal transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]";
 const glassButton =
   "inline-flex h-10 items-center justify-center rounded-squircle-xs bg-white/15 px-4 text-[0.95rem] font-medium text-white backdrop-blur-md transition-[background-color,scale] duration-200 hover:bg-white/25 active:scale-[0.98]";
 

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ThemeScript } from "@/components/layout/theme-script";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -19,9 +20,21 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
+/** The browser's own bar colour follows the mode (paper in each). */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#101012" },
+  ],
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${figtree.variable} h-full`}>
+    // suppressHydrationWarning: ThemeScript may set data-theme on <html> before React loads
+    <html lang="en" className={`${figtree.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col">
         <a
           href="#main"

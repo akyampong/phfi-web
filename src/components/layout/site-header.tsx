@@ -9,6 +9,7 @@ import { NavLinks } from "./nav-links";
 import { NavList } from "./nav-list";
 import { SearchBar } from "./search-bar";
 import { SearchShortcut } from "./search-shortcut";
+import { ThemeSwitch } from "./theme-switch";
 import { MenuMeetings } from "./menu-meetings";
 import { DrawerSection, SiteMenu } from "./site-menu";
 
@@ -60,6 +61,8 @@ export function SiteHeader() {
 
             <DrawerSection className="flex flex-col gap-8">
               <p className="text-[0.92rem] leading-[1.75] text-night-text">{siteConfig.description}</p>
+              {/* Auto (follow the device) / Light / Dark */}
+              <ThemeSwitch />
               <div>
                 <Suspense fallback={null}>
                   <SignedInAs />

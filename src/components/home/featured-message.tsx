@@ -12,7 +12,7 @@ export function FeaturedMessage({ message }: { message: ContentItem }) {
       <Link
         href={message.href}
         aria-label={`Watch ${message.title}`}
-        className="group relative block aspect-video overflow-hidden rounded-squircle-md bg-ink lg:col-span-7"
+        className="group relative block aspect-video overflow-hidden rounded-squircle-md bg-night lg:col-span-7"
       >
         <Cover
           photo={message.photo}

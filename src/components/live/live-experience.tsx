@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check, HandHeart, Heart, PanelRightClose, PanelRightOpen, Radio } from "lucide-react";
 import { ShareIcon } from "@/components/home/verse-actions";
@@ -9,12 +9,13 @@ import { meetingSchedule, meetingTimeZoneId, type Meeting } from "@/config/site"
 import type { ThisWeek } from "@/content/home";
 import { TRANSLATION, bibleComUrl } from "@/lib/bible";
 import { refreshLiveStatus, useLiveStatus } from "@/lib/live-status";
+import { useIsDark } from "@/lib/theme";
 import { occurrencesBetween, wallDate } from "@/lib/schedule";
 
 type Stream = { videoId: string; title: string; viewers?: number; startedAt?: string };
 
 /**
- * The live page while a stream is on: a dark theatre with the player, and beside it (below on
+ * The live page while a stream is on, in the site's light or dark mode: the player, and beside it (below on
  * phones, where the player stays pinned at the top) a panel to chat or pray along with this
  * week's verse and prayer points. Above: a live status bar (the meeting, people watching, how
  * long it's been on) and quick actions (share, prayer request, give, YouTube, theatre mode).
@@ -30,6 +31,17 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
   const [tab, setTab] = useState<"chat" | "pray">("chat");
   // Only trust "not live" once this page has asked for itself (not from an earlier page).
   const [checked, setChecked] = useState(false);
+  const dark = useIsDark();
+
+  const playerSrc = `https://www.youtube.com/embed/${stream.videoId}?autoplay=1&rel=0&playsinline=1`;
+  // YouTube only shows its chat on the site named here; dark_theme matches the page's mode.
+  const chatSrc = `https://www.youtube.com/live_chat?v=${stream.videoId}&embed_domain=${host}&dark_theme=${dark ? 1 : 0}`;
+  const playerRef = useRef<HTMLIFrameElement>(null);
+  const chatRef = useRef<HTMLIFrameElement>(null);
+  // Leaving /live keeps the page alive but hidden (so it can come back instantly), and a
+  // hidden player would go on playing out of sight. So both are unloaded when it's hidden.
+  useUnloadWhenHidden(playerRef);
+  useUnloadWhenHidden(chatRef);
 
   useEffect(() => {
     void refreshLiveStatus().finally(() => setChecked(true));
@@ -46,19 +58,19 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <div aria-live="polite" className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
           {ended ? (
-            <span className="inline-flex h-7 items-center rounded-squircle-xs bg-white/15 px-2.5 text-xs font-bold uppercase tracking-[0.06em]">
+            <span className="inline-flex h-7 items-center rounded-squircle-xs bg-ink/10 px-2.5 text-xs font-bold uppercase tracking-[0.06em]">
               Ended
             </span>
           ) : (
-            <span className="inline-flex h-7 items-center gap-1.5 rounded-squircle-xs bg-live px-2.5 text-xs font-bold uppercase tracking-[0.06em]">
+            <span className="inline-flex h-7 items-center gap-1.5 rounded-squircle-xs bg-live px-2.5 text-xs font-bold uppercase tracking-[0.06em] text-white">
               <Radio aria-hidden className="animate-live size-3.5" strokeWidth={2.25} />
               Live
             </span>
           )}
           {meeting && <span className="font-semibold">{meeting.name}</span>}
-          {viewers !== undefined && <span className="text-white/60">{viewers.toLocaleString()} watching</span>}
+          {viewers !== undefined && <span className="text-muted">{viewers.toLocaleString()} watching</span>}
           {!ended && stream.startedAt && (
-            <span className="text-white/60">
+            <span className="text-muted">
               <StartedAgo at={stream.startedAt} />
             </span>
           )}
@@ -100,9 +112,11 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
             }`}
           >
             <iframe
+              ref={playerRef}
+              data-src={playerSrc}
               // The standard player, not youtube-nocookie: the privacy-mode player can't see a
               // viewer's YouTube sign-in, so YouTube often answers it with "confirm you're not a bot".
-              src={`https://www.youtube.com/embed/${stream.videoId}?autoplay=1&rel=0&playsinline=1`}
+              src={playerSrc}
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -115,12 +129,15 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
         </div>
 
         {/* Chat and Pray along: beside the player on wide screens (same height), below it on phones */}
+        {/* Just an outline in light mode (a slight lift in dark, where an outline alone reads faintly).
+            Everything inside sits 6px in from the panel's edge, so the panel's outline shows all the
+            way round, and inner corners are the panel's 20px less that gap: 14px (rounded-squircle-xs) */}
         <aside
-          className={`flex h-[70svh] flex-col overflow-hidden rounded-squircle-md bg-white/[0.04] ring-1 ring-white/10 ring-inset lg:h-auto ${
+          className={`flex h-[70svh] flex-col gap-1.5 overflow-hidden rounded-squircle-sm p-1.5 ring-1 ring-rule ring-inset lg:h-auto dark:bg-canvas ${
             theatre ? "lg:hidden" : ""
           }`}
         >
-          <div role="tablist" aria-label="Alongside the stream" className="flex gap-1 p-1.5">
+          <div role="tablist" aria-label="Alongside the stream" className="flex gap-1">
             <TabButton id="chat" active={tab === "chat"} onClick={() => setTab("chat")}>
               Chat
             </TabButton>
@@ -128,10 +145,13 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
               Pray along
             </TabButton>
           </div>
-          <div role="tabpanel" id="live-panel-chat" aria-labelledby="live-tab-chat" hidden={tab !== "chat"} className="relative min-h-0 flex-1">
+          <div role="tabpanel" id="live-panel-chat" aria-labelledby="live-tab-chat" hidden={tab !== "chat"}
+            className="relative min-h-0 flex-1 overflow-hidden rounded-squircle-xs"
+          >
             <iframe
-              // YouTube only shows its chat on the site named here; dark_theme matches the page.
-              src={`https://www.youtube.com/live_chat?v=${stream.videoId}&embed_domain=${host}&dark_theme=1`}
+              ref={chatRef}
+              data-src={chatSrc}
+              src={chatSrc}
               title="Live chat"
               className="absolute inset-0 size-full"
             />
@@ -141,14 +161,14 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
             id="live-panel-pray"
             aria-labelledby="live-tab-pray"
             hidden={tab !== "pray"}
-            className="min-h-0 flex-1 overflow-y-auto px-5 pb-6 pt-3"
+            className="min-h-0 flex-1 overflow-y-auto px-3.5 pb-4 pt-2"
           >
             <PrayAlong week={week} />
           </div>
         </aside>
       </div>
 
-      <h1 id="stream-title" className="mt-6 max-w-[40ch] text-headline text-balance text-white">
+      <h1 id="stream-title" className="mt-6 max-w-[40ch] text-headline text-balance text-ink">
         {title}
       </h1>
     </section>
@@ -156,7 +176,10 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
 }
 
 const actionButton =
-  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-white/10 px-3.5 text-sm font-semibold text-white transition-[background-color,scale] duration-200 hover:bg-white/15 active:scale-[0.98] focus-visible:outline-white";
+  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-ink/[0.06] px-3.5 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-ink/10 active:scale-[0.98]";
+/** On the dark "stream has ended" overlay, which is dark in both modes. */
+const overlayButton =
+  "inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-white/15 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline-white";
 
 function TabButton({
   id,
@@ -177,8 +200,8 @@ function TabButton({
       aria-controls={`live-panel-${id}`}
       aria-selected={active}
       onClick={onClick}
-      className={`h-9 flex-1 cursor-pointer rounded-squircle-xs text-sm font-semibold transition-colors focus-visible:outline-white ${
-        active ? "bg-white text-ink" : "text-white/70 hover:bg-white/10 hover:text-white"
+      className={`h-9 flex-1 cursor-pointer rounded-squircle-xs text-sm font-semibold transition-colors ${
+        active ? "bg-ink text-paper" : "text-muted hover:bg-ink/5 hover:text-ink"
       }`}
     >
       {children}
@@ -191,35 +214,35 @@ function PrayAlong({ week }: { week: ThisWeek }) {
   return (
     <div className="flex flex-col gap-7">
       <figure>
-        <figcaption className="text-xs font-semibold uppercase text-white/50">This week’s verse</figcaption>
-        <blockquote className="mt-3 text-[1.05rem] leading-relaxed text-white/90">
+        <figcaption className="text-xs font-semibold uppercase text-muted">This week’s verse</figcaption>
+        <blockquote className="mt-3 text-[1.05rem] leading-relaxed text-ink">
           <p>“{week.verse.text}”</p>
         </blockquote>
         <a
           href={bibleComUrl(week.verse.passage)}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 inline-block text-sm text-white/60 underline-offset-4 hover:text-white"
+          className="mt-3 inline-block text-sm text-muted underline-offset-4 hover:text-ink"
         >
-          <span className="font-semibold text-white">{week.verse.reference}</span> · {TRANSLATION}
+          <span className="font-semibold text-ink">{week.verse.reference}</span> · {TRANSLATION}
         </a>
       </figure>
       <div>
-        <h2 className="text-xs font-semibold uppercase text-white/50">Prayer points</h2>
+        <h2 className="text-xs font-semibold uppercase text-muted">Prayer points</h2>
         <ol className="mt-4 flex flex-col gap-4">
           {week.prayerPoints.map((point, i) => (
             <li key={point} className="flex items-baseline gap-3">
-              <span aria-hidden className="w-5 shrink-0 text-sm font-semibold tabular-nums text-white/40">
+              <span aria-hidden className="w-5 shrink-0 text-sm font-semibold tabular-nums text-muted">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className="text-[0.98rem] leading-relaxed text-white/85">{point}</p>
+              <p className="text-[0.98rem] leading-relaxed text-body">{point}</p>
             </li>
           ))}
         </ol>
       </div>
       <Link
         href="/prayer"
-        className="inline-flex h-10 items-center justify-center self-start rounded-squircle-xs bg-white px-4 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
+        className="inline-flex h-10 items-center justify-center self-start rounded-squircle-xs bg-ink px-4 text-sm font-semibold text-paper transition-[background-color,scale] duration-200 hover:bg-ink/85 active:scale-[0.98]"
       >
         Send a prayer request
       </Link>
@@ -242,12 +265,12 @@ function EndedScreen({ videoId }: { videoId: string }) {
           href={`https://www.youtube.com/watch?v=${videoId}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-10 items-center gap-1.5 rounded-squircle-xs bg-white px-4 text-sm font-semibold text-ink transition-colors hover:bg-white/90"
+          className="inline-flex h-10 items-center gap-1.5 rounded-squircle-xs bg-white px-4 text-sm font-semibold text-coal transition-colors hover:bg-white/90"
         >
           Watch on YouTube
           <ArrowUpRight aria-hidden className="size-4" />
         </a>
-        <Link href="/" className={actionButton}>
+        <Link href="/" className={overlayButton}>
           Back to home
         </Link>
       </div>
@@ -299,4 +322,23 @@ function currentMeeting(now: Date): Meeting | undefined {
     return t >= start - 30 * 60_000 && t <= start + (o.meeting.durationMinutes + 60) * 60_000;
   });
   return match?.meeting;
+}
+
+/**
+ * Unloads an iframe while its page is hidden, and loads it again when the page comes back.
+ *
+ * Next keeps pages you navigate away from alive but hidden (display: none), so going Back is
+ * instant. Hidden doesn't stop a YouTube player, though: the stream would carry on playing out
+ * of sight. React runs effect cleanups when a page is hidden, so the cleanup swaps the frame for
+ * a blank page, and the effect puts the real address (kept in data-src) back when it's shown.
+ * For a live stream that's what you want anyway: it rejoins at the current moment.
+ */
+function useUnloadWhenHidden(ref: RefObject<HTMLIFrameElement | null>) {
+  useLayoutEffect(() => {
+    const frame = ref.current;
+    if (!frame) return;
+    const src = frame.dataset.src;
+    if (src && frame.getAttribute("src") !== src) frame.setAttribute("src", src);
+    return () => frame.setAttribute("src", "about:blank");
+  }, [ref]);
 }

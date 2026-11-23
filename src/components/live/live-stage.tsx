@@ -23,14 +23,14 @@ export async function LiveStage() {
   return <LiveExperience stream={{ videoId, title, viewers, startedAt }} host={host} week={thisWeek} />;
 }
 
-/** A dark space the size of the player while the live status loads. */
+/** A faint space the size of the player while the live status loads. */
 export function LiveStageSkeleton() {
   return (
     <div aria-hidden className="container-page pb-16 pt-4 lg:pt-6">
       <div className="h-7" />
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-5">
-        <div className="aspect-video bg-white/[0.04] lg:rounded-squircle-lg" />
-        <div className="hidden rounded-squircle-md bg-white/[0.04] lg:block" />
+        <div className="aspect-video bg-ink/[0.05] lg:rounded-squircle-lg" />
+        <div className="hidden rounded-squircle-md bg-ink/[0.05] lg:block" />
       </div>
     </div>
   );

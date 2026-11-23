@@ -1,11 +1,25 @@
 @import "tailwindcss";
 
+/* `dark:` utilities: on when the device is dark (unless Light was chosen) or Dark was chosen */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+}
+
 /*
   PHFI design tokens
   Near-black type set in Figtree on white, small grey uppercase labels,
   spacing rather than dividing lines.
   Fully neutral: black, white and greys. Red is kept only for the live indicator.
-  Light mode only.
+  Light and dark modes: the colours below are the light ones; "Dark mode" further down swaps
+  them when the visitor's device is dark (or they choose Dark in the menu). Use these tokens
+  for page text and surfaces, not fixed white or black, so both modes work.
 */
 @theme {
   /* Surfaces */
@@ -23,6 +37,13 @@
 
   /* Live indicator */
   --color-live: #d92d20;
+
+  /*
+    Coal: the near-black that stays near-black in both modes, for text on surfaces that are
+    white in both (white buttons on photos, coloured tiles and dark panels). Ink flips to light
+    in dark mode, so it can't be used there.
+  */
+  --color-coal: #1b1b1b;
 
   /* Dark surfaces (the menu drawer) */
   --color-night: #121417;
@@ -157,6 +178,39 @@
 @layer base {
   html {
     color-scheme: light;
+  }
+
+  /*
+    Dark mode. The theme is "auto" (follow the device) unless the visitor picks Light or Dark
+    in the menu, which sets data-theme on <html> (see theme-script.tsx). The same dark colours
+    apply in both cases below. "night" (the menu drawer, the newsletter) lifts a little off
+    the dark page so those panels still read as panels.
+  */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-paper: #101012;
+    --color-canvas: #1b1b1e;
+    --color-ink: #f4f4f5;
+    --color-body: #d4d4d8;
+    --color-muted: #9b9ba3;
+    --color-rule: #27272b;
+    --color-rule-strong: #3a3a40;
+    --color-night: #1c1d21;
+    --color-night-rule: #33353c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --color-paper: #101012;
+      --color-canvas: #1b1b1e;
+      --color-ink: #f4f4f5;
+      --color-body: #d4d4d8;
+      --color-muted: #9b9ba3;
+      --color-rule: #27272b;
+      --color-rule-strong: #3a3a40;
+      --color-night: #1c1d21;
+      --color-night-rule: #33353c;
+    }
   }
 
   body {

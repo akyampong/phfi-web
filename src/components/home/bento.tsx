@@ -75,7 +75,7 @@ export function Bento({ tiles }: { tiles: BentoTile[] }) {
                       </span>
                     )}
                   </span>
-                  <span className="relative inline-flex h-9 items-center self-start rounded-squircle-xs bg-white px-4 text-sm font-semibold text-ink transition-colors group-hover:bg-white/90">
+                  <span className="relative inline-flex h-9 items-center self-start rounded-squircle-xs bg-white px-4 text-sm font-semibold text-coal transition-colors group-hover:bg-white/90">
                     {tile.action}
                   </span>
                 </Link>

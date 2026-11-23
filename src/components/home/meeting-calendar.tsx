@@ -63,7 +63,7 @@ export function MeetingCalendar({ colour }: { colour: string }) {
     <div
       // Links across the site (and /live when there's no stream) bring people here
       id="meeting-times"
-      className="relative flex h-full min-h-[18rem] scroll-mt-24 flex-col overflow-hidden rounded-squircle-md p-6 text-white sm:min-h-[20rem] lg:min-h-[24rem] lg:p-8"
+      className="relative flex h-full min-h-[18rem] scroll-mt-24 flex-col overflow-hidden rounded-squircle-md p-6 dark:ring-1 dark:ring-white/10 dark:ring-inset text-white sm:min-h-[20rem] lg:min-h-[24rem] lg:p-8"
       style={{ backgroundColor: colour }}
       onKeyDown={(e) => {
         if (e.key === "Escape") setSelected(null);
@@ -151,7 +151,7 @@ export function MeetingCalendar({ colour }: { colour: string }) {
           href={now ? googleCalendarUrl() : "/calendar.ics"}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-squircle-xs bg-white px-3.5 text-sm font-semibold text-ink transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
+          className="inline-flex h-9 items-center gap-2 rounded-squircle-xs bg-white px-3.5 text-sm font-semibold text-coal transition-[background-color,scale] duration-200 hover:bg-white/90 active:scale-[0.98]"
         >
           {/* Google Calendar's own logo (from Google's servers), so it's clear where this goes */}
           <Image src="/assets/google-calendar.png" alt="" width={20} height={20} className="size-5" />
@@ -238,7 +238,7 @@ function MeetingDetails({ occurrence: o, now, live }: { occurrence: Occurrence; 
 
 const panelButton =
   "inline-flex h-9 items-center gap-2 rounded-squircle-xs px-3.5 text-[0.8rem] font-semibold transition-[background-color,scale] duration-200 active:scale-[0.98]";
-const panelButtonSolid = `${panelButton} bg-white text-ink hover:bg-white/90`;
+const panelButtonSolid = `${panelButton} bg-white text-coal hover:bg-white/90`;
 const panelButtonGlass = `${panelButton} bg-white/12 text-white hover:bg-white/20`;
 
 /** "1 hr 30 min", "2 hours". */

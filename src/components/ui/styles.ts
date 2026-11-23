@@ -2,7 +2,7 @@
 
 /** Solid black button, the main action in a section. */
 export const buttonPrimary =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-squircle-xs bg-ink px-5 text-[0.95rem] font-semibold text-paper transition-[background-color,scale] duration-200 hover:bg-black active:scale-[0.98]";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-squircle-xs bg-ink px-5 text-[0.95rem] font-semibold text-paper transition-[background-color,scale] duration-200 hover:bg-ink/85 active:scale-[0.98]";
 
 /** Outlined button, the secondary action beside a primary one. */
 export const buttonSecondary =

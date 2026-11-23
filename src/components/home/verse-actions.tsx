@@ -56,7 +56,7 @@ export function VerseActions({ text, url }: { text: string; url: string }) {
 }
 
 const iconButton =
-  "flex size-9 cursor-pointer items-center justify-center rounded-full text-muted transition-colors hover:bg-black/5 hover:text-ink";
+  "flex size-9 cursor-pointer items-center justify-center rounded-full text-muted transition-colors hover:bg-ink/5 hover:text-ink";
 
 /**
  * The share icon from iPhones and Macs: an arrow rising out of an open, rounded box. Drawn
