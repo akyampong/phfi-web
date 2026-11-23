@@ -2,8 +2,16 @@
 
 import { useSyncExternalStore } from "react";
 
-/** Whether the channel is streaming, as /api/live reports it. */
-export type LiveStatus = { live: boolean; title?: string };
+/** Whether the channel is streaming, as /api/live reports it, with the stream's details. */
+export type LiveStatus = {
+  live: boolean;
+  title?: string;
+  videoId?: string;
+  /** People watching right now, when YouTube reports it. */
+  viewers?: number;
+  /** When the stream went live (ISO time). */
+  startedAt?: string;
+};
 
 const OFFLINE: LiveStatus = { live: false };
 /** How often an open page asks whether the channel is live (the server answers from a 30-second cache). */
@@ -27,12 +35,27 @@ async function check() {
     if (!response.ok) return;
     const next: LiveStatus = await response.json();
     // Only tell components when something actually changed.
-    if (status && status.live === next.live && status.title === next.title) return;
+    if (
+      status &&
+      status.live === next.live &&
+      status.title === next.title &&
+      status.videoId === next.videoId &&
+      status.viewers === next.viewers
+    )
+      return;
     status = next;
     for (const listener of listeners) listener();
   } catch {
     // Offline or the server is busy: keep what we last knew.
   }
+}
+
+/**
+ * Asks straight away instead of waiting for the next regular check. The live page calls
+ * this when it opens, so it never acts on an answer left over from an earlier page.
+ */
+export function refreshLiveStatus() {
+  return check();
 }
 
 function subscribe(listener: () => void) {

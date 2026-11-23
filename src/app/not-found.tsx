@@ -23,8 +23,8 @@ export default function NotFound() {
           <Link href="/" className={buttonPrimary}>
             Go home
           </Link>
-          <Link href="/live" className={buttonSecondary}>
-            Join us live
+          <Link href="/#meeting-times" className={buttonSecondary}>
+            Meeting times
           </Link>
         </div>
       </div>

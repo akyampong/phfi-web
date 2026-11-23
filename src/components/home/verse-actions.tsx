@@ -62,7 +62,7 @@ const iconButton =
  * The share icon from iPhones and Macs: an arrow rising out of an open, rounded box. Drawn
  * here because the icon set's version has a squarer, flatter box that reads less clearly.
  */
-function ShareIcon() {
+export function ShareIcon({ className = "size-[1.2rem]" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -72,7 +72,7 @@ function ShareIcon() {
       strokeWidth={1.75}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="size-[1.2rem]"
+      className={className}
     >
       {/* The box, open at the top where the arrow comes out */}
       <path d="M8.5 9.5H7.25A2.25 2.25 0 0 0 5 11.75v7A2.25 2.25 0 0 0 7.25 21h9.5A2.25 2.25 0 0 0 19 18.75v-7a2.25 2.25 0 0 0-2.25-2.25H15.5" />

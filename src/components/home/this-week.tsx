@@ -4,10 +4,8 @@ import { bodyText, buttonPrimary, groupUnderline } from "@/components/ui/styles"
 import type { ThisWeek as ThisWeekData } from "@/content/home";
 import { Reveal } from "@/components/ui/reveal";
 import { VerseActions } from "./verse-actions";
+import { TRANSLATION, bibleComUrl } from "@/lib/bible";
 
-/** The verse of the week is always the New King James Version (Bible.com's version 114). */
-const TRANSLATION = "NKJV";
-const bibleComUrl = (passage: string) => `https://www.bible.com/bible/114/${passage}.${TRANSLATION}`;
 
 /** The two column headings, "This week's verse" and "Prayer points", share one style. */
 const columnHeading =

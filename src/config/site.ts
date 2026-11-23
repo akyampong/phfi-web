@@ -26,7 +26,7 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
   {
     title: "Watch",
     links: [
-      { label: "Live", href: "/live" },
+      { label: "Meeting times", href: "/#meeting-times" },
       { label: "Recaps", href: "/watch" },
       { label: "Series", href: "/watch/series" },
       { label: "Clips", href: "/watch/clips" },

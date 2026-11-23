@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { meetingSchedule, meetingTimeZoneId } from "@/config/site";
 import { useNow } from "@/components/live/schedule";
+import { useLiveStatus } from "@/lib/live-status";
 import { occurrencesBetween, upcomingMeetings, wallDate, type Occurrence } from "@/lib/schedule";
 
 /**
@@ -25,7 +26,8 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
  *
  * Each meeting day is a button: choosing one slides up a glass panel over the foot of the
  * calendar with that meeting's details (date and time in the visitor's zone, length, what it
- * is) and what to do next: add that one date to Google Calendar and join online, or, once it
+ * is) and what to do next: add that one date to Google Calendar (and watch live, during a
+ * stream), or, once it
  * has passed, watch the recaps. The × button, the Escape key or changing month closes it.
  *
  * Days are worked out in the visitor's own time zone, so a 7 PM GMT meeting lands on the
@@ -34,6 +36,7 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
  */
 export function MeetingCalendar({ colour }: { colour: string }) {
   const now = useNow();
+  const { live } = useLiveStatus();
   const [offset, setOffset] = useState(0);
   /** The meeting day whose details are showing, as a day of the month on show. */
   const [selected, setSelected] = useState<number | null>(null);
@@ -58,7 +61,9 @@ export function MeetingCalendar({ colour }: { colour: string }) {
 
   return (
     <div
-      className="relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-squircle-md p-6 text-white sm:min-h-[20rem] lg:min-h-[24rem] lg:p-8"
+      // Links across the site (and /live when there's no stream) bring people here
+      id="meeting-times"
+      className="relative flex h-full min-h-[18rem] scroll-mt-24 flex-col overflow-hidden rounded-squircle-md p-6 text-white sm:min-h-[20rem] lg:min-h-[24rem] lg:p-8"
       style={{ backgroundColor: colour }}
       onKeyDown={(e) => {
         if (e.key === "Escape") setSelected(null);
@@ -174,7 +179,7 @@ export function MeetingCalendar({ colour }: { colour: string }) {
             </button>
             <div className="flex flex-col gap-5">
               {chosen.map((o) => (
-                <MeetingDetails key={o.meeting.name} occurrence={o} now={now} />
+                <MeetingDetails key={o.meeting.name} occurrence={o} now={now} live={live} />
               ))}
             </div>
           </>
@@ -185,7 +190,7 @@ export function MeetingCalendar({ colour }: { colour: string }) {
 }
 
 /** One meeting's details in the panel: when, how long, what it is, and what to do next. */
-function MeetingDetails({ occurrence: o, now }: { occurrence: Occurrence; now: Date }) {
+function MeetingDetails({ occurrence: o, now, live }: { occurrence: Occurrence; now: Date; live: boolean }) {
   const ends = o.start.getTime() + (o.timed ? o.meeting.durationMinutes * 60_000 : 86_400_000);
   const over = ends <= now.getTime();
   const day = o.timed
@@ -218,9 +223,12 @@ function MeetingDetails({ occurrence: o, now }: { occurrence: Occurrence; now: D
               <Image src="/assets/google-calendar.png" alt="" width={16} height={16} className="size-4" />
               Add to Google Calendar
             </a>
-            <Link href="/live" className={panelButtonGlass}>
-              Join online
-            </Link>
+            {/* /live only exists during a stream, so this shows only then */}
+            {live && (
+              <Link href="/live" className={panelButtonGlass}>
+                Watch live
+              </Link>
+            )}
           </>
         )}
       </div>

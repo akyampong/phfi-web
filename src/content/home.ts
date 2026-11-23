@@ -294,7 +294,7 @@ export const heroSlides: HeroSlide[] = [
     eyebrow: "End of the month",
     headline: "Jericho\nHour",
     text: "Our end-of-month prayer meeting: two hours\nof prayer together, to close the month well.",
-    primary: { label: "See meeting times", href: "/live#schedule" },
+    primary: { label: "See meeting times", href: "/#meeting-times" },
     secondary: { label: "Learn more", href: "/connect" },
     photo: {
       src: "/assets/bg-2.avif",
@@ -323,7 +323,7 @@ export const ways: Way[] = [
     live: true,
     text: "Worship, pray and open the Bible together online every Tuesday and Thursday evening.",
     action: "Find a time",
-    href: "/live#schedule",
+    href: "/#meeting-times",
     liveAction: { label: "Join us live", href: "/live" },
   },
   {
@@ -388,7 +388,7 @@ export const bentoTiles: BentoTile[] = [
     title: "Teaching through a series, book by book.",
     detail: meetingSummary("Tuesday Fellowship"),
     action: "Learn more",
-    href: "/live#schedule",
+    href: "/#meeting-times",
     ...meetingLook.sunset,
   },
   {
@@ -397,7 +397,7 @@ export const bentoTiles: BentoTile[] = [
     title: "A short word, open talk and prayer.",
     detail: meetingSummary("Thursday Fellowship"),
     action: "Learn more",
-    href: "/live#schedule",
+    href: "/#meeting-times",
     ...meetingLook.together,
   },
   {
@@ -406,14 +406,14 @@ export const bentoTiles: BentoTile[] = [
     title: "Two hours of prayer to end the month.",
     detail: meetingSummary("Jericho Hour"),
     action: "Learn more",
-    href: "/live#schedule",
+    href: "/#meeting-times",
     ...meetingLook.midnight,
   },
   {
     label: "Meeting times",
     title: "See every meeting in your time zone.",
     action: "See the times",
-    href: "/live#schedule",
+    href: "/#meeting-times",
     motif: "rays",
     colour: "#141416",
     calendar: true,
