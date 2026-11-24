@@ -7,7 +7,7 @@
  * { src: "/about/group.jpg", alt: "…" }).
  */
 import type { Photo } from "@/components/art/cover";
-import { unsplash } from "@/content/home";
+import { unsplash, unsplashPortrait } from "@/content/home";
 
 export const intro = {
   headline: "A family of faith,\ngathered from everywhere",
@@ -136,37 +136,37 @@ export const board: BoardMember[] = [
     name: "Rev. Daniel Asante",
     role: "President & Senior Pastor",
     bio: "Leads the fellowship and teaches through the Tuesday series.",
-    photo: unsplash("1588178454780-441fa5b99fa5", "Daniel Asante", "man-in-black-suit-jacket-0OczC2-oFsA"),
+    photo: unsplashPortrait("1588178454780-441fa5b99fa5", "Daniel Asante", "man-in-black-suit-jacket-0OczC2-oFsA"),
   },
   {
     name: "Grace Owusu-Ansah",
     role: "Vice President",
     bio: "Oversees pastoral care and the prayer team.",
-    photo: unsplash("1697063882499-f7fca7d2d713", "Grace Owusu-Ansah", "a-woman-in-a-black-top-smiling-at-the-camera-PaLmM"),
+    photo: unsplashPortrait("1697063882499-f7fca7d2d713", "Grace Owusu-Ansah", "a-woman-in-a-black-top-smiling-at-the-camera-PaLmM"),
   },
   {
     name: "Samuel Boateng",
     role: "Secretary",
     bio: "Keeps the board’s records and the fellowship’s calendar.",
-    photo: unsplash("1650490323009-96fc950a959c", "Samuel Boateng", "a-man-in-a-suit-and-tie-smiling-5HvKJ0Zit_8"),
+    photo: unsplashPortrait("1650490323009-96fc950a959c", "Samuel Boateng", "a-man-in-a-suit-and-tie-smiling-5HvKJ0Zit_8"),
   },
   {
     name: "Akosua Mensah",
     role: "Treasurer",
     bio: "Stewards the fellowship’s giving and its accounts.",
-    photo: unsplash("1573497491765-dccce02b29df", "Akosua Mensah", "woman-in-gray-and-yellow-pussybow-top-_5_CBVCLBsY"),
+    photo: unsplashPortrait("1573497491765-dccce02b29df", "Akosua Mensah", "woman-in-gray-and-yellow-pussybow-top-_5_CBVCLBsY"),
   },
   {
     name: "Emmanuel Darko",
     role: "Board Member",
     bio: "Leads Jericho Hour and the monthly prayer nights.",
-    photo: unsplash("1657218380188-40c56bfdf97f", "Emmanuel Darko", "a-man-smiling-for-the-camera-_WHmeGzrqvs"),
+    photo: unsplashPortrait("1657218380188-40c56bfdf97f", "Emmanuel Darko", "a-man-smiling-for-the-camera-_WHmeGzrqvs"),
   },
   {
     name: "Abena Ofori",
     role: "Board Member",
     bio: "Looks after youth and young adults across the fellowship.",
-    photo: unsplash("1632612721400-0a337458b7ed", "Abena Ofori", "a-smiling-woman-with-braids-and-a-black-shirt-eJ5l2jepIQA"),
+    photo: unsplashPortrait("1632612721400-0a337458b7ed", "Abena Ofori", "a-smiling-woman-with-braids-and-a-black-shirt-eJ5l2jepIQA"),
   },
 ];
 

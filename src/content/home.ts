@@ -22,6 +22,19 @@ export function unsplash(id: string, alt: string, page: string): Photo {
   };
 }
 
+/**
+ * A head-and-shoulders portrait from Unsplash: cropped by Unsplash to 800 × 1000 around the
+ * face. Small to fetch (a 2000px original can take Next's image resizer longer than it waits,
+ * and the picture never appears), and framed on the face whatever the original's shape.
+ */
+export function unsplashPortrait(id: string, alt: string, page: string): Photo {
+  return {
+    src: `https://images.unsplash.com/photo-${id}?w=800&h=1000&fit=crop&crop=faces&q=80&fm=jpg`,
+    alt,
+    credit: `https://unsplash.com/photos/${page}`,
+  };
+}
+
 export type ContentItem = {
   slug: string;
   kind: "recap" | "article";
