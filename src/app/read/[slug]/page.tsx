@@ -78,7 +78,7 @@ async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">
             <p className={metaCaps}>
               {formatDate(article.date)} · {article.minutes} min read
             </p>
-            <h1 className="mt-4 text-[clamp(2.25rem,1.5rem+2.4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance text-ink">
+            <h1 className="mt-4 text-page text-balance text-ink">
               {article.title}
             </h1>
             {article.summary && (

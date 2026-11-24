@@ -28,7 +28,7 @@ export function LatestHero({ message }: { message: Message }) {
         <p className="text-sm font-medium text-white/80">
           Latest message{message.meeting && ` · ${message.meeting}`}
         </p>
-        <h2 id="hero-title" className="mt-3 max-w-[18ch] text-white text-[clamp(2.25rem,1.35rem+2.8vw,4.5rem)] font-normal leading-[1.02] tracking-[-0.035em] text-balance">
+        <h2 id="hero-title" className="mt-3 max-w-[22ch] text-page text-balance text-white">
           <Link href={href} className="outline-offset-4">
             {message.title}
           </Link>

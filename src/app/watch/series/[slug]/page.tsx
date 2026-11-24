@@ -75,7 +75,7 @@ async function SeriesView({ params }: Pick<PageProps<"/watch/series/[slug]">, "p
             <p className="text-sm font-medium text-white/75">
               Series · {parts.length} {parts.length === 1 ? "message" : "messages"} · {range}
             </p>
-            <h1 className="mt-4 max-w-[16ch] text-white text-[clamp(2.5rem,1.55rem+3.2vw,4.5rem)] font-normal leading-[1.02] tracking-[-0.035em] text-balance">
+            <h1 className="mt-4 max-w-[18ch] text-page text-balance text-white">
               {series.title}
             </h1>
             {series.description && (

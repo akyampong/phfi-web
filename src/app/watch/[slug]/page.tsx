@@ -102,7 +102,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
               </div>
 
               <header className="mt-6 lg:mt-8">
-                <h1 className="max-w-[30ch] text-headline text-balance text-ink">{message.title}</h1>
+                <h1 className="max-w-[36ch] text-[clamp(1.5rem,1.3rem+0.8vw,2rem)] font-medium leading-tight tracking-[-0.02em] text-balance text-ink">{message.title}</h1>
                 <p className={`mt-3 ${metaCaps}`}>
                   {[message.meeting, formatDate(message.date), message.seconds !== undefined && formatLength(message.seconds)]
                     .filter(Boolean)

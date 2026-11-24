@@ -69,10 +69,10 @@ export default function AboutPage() {
 
 function Intro() {
   return (
-    <header className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-16">
+    <header className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-16">
       <div className="lg:col-span-7">
         <p className={eyebrow}>About us</p>
-        <h1 className="mt-4 max-w-[16ch] text-display text-ink lg:max-w-none lg:whitespace-pre-line">{intro.headline}</h1>
+        <h1 className="mt-4 max-w-[18ch] text-page text-balance text-ink lg:max-w-none lg:whitespace-pre-line">{intro.headline}</h1>
       </div>
       <div className="lg:col-span-5">
         <p className={`max-w-[46ch] ${bodyText}`}>{intro.text}</p>
@@ -255,6 +255,7 @@ function Beliefs() {
   );
 }
 
+/** The board: small head-and-shoulders portraits, six across on wide screens, with name, role and a line. */
 function Board() {
   return (
     <section id="leadership" aria-labelledby="board-title" className="scroll-mt-24">
@@ -267,9 +268,9 @@ function Board() {
           to our mission.
         </p>
       </Reveal>
-      <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:mt-14 lg:gap-x-8 lg:gap-y-14">
+      <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-6 lg:mt-14 lg:grid-cols-6 lg:gap-x-5">
         {board.map((member, i) => (
-          <Reveal as="li" key={`${member.role}-${i}`} order={i % 3}>
+          <Reveal as="li" key={`${member.name}-${i}`} order={i % 6}>
             <Member member={member} />
           </Reveal>
         ))}
@@ -281,14 +282,16 @@ function Board() {
 function Member({ member }: { member: BoardMember }) {
   return (
     <figure>
-      <div className="relative aspect-[4/5] overflow-hidden rounded-squircle-md bg-canvas">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-squircle-sm bg-canvas">
         {member.photo ? (
           <Image
             src={member.photo.src}
-            alt={member.photo.alt || member.name}
+            // The name is right below, so the picture needs no description of its own
+            alt=""
             fill
-            sizes="(min-width: 1504px) 460px, (min-width: 768px) 33vw, 50vw"
-            className="object-cover"
+            sizes="(min-width: 1504px) 225px, (min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
+            // Faces sit in the upper part of a portrait
+            className="object-cover object-[50%_25%]"
           />
         ) : (
           // Until there's a portrait: an outline of a person, so the grid keeps its shape
@@ -298,9 +301,9 @@ function Member({ member }: { member: BoardMember }) {
         )}
       </div>
       <figcaption className="mt-4">
-        <span className="block text-title text-ink">{member.name}</span>
-        <span className="mt-1 block text-[0.95rem] text-muted">{member.role}</span>
-        {member.bio && <span className="mt-3 block text-[0.95rem] leading-relaxed text-body">{member.bio}</span>}
+        <span className="block text-[1rem] font-semibold leading-snug text-ink">{member.name}</span>
+        <span className="mt-0.5 block text-sm text-muted">{member.role}</span>
+        {member.bio && <span className="mt-2.5 block text-sm leading-relaxed text-body">{member.bio}</span>}
       </figcaption>
     </figure>
   );

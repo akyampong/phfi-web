@@ -66,7 +66,8 @@
 
   /*
     Type scale. Use these for every heading so sizes stay consistent:
-    text-display  page hero headline        40 → 72px, medium, tight
+    text-display  hero headlines only       40 → 72px, medium, tight
+    text-page     a page's own title        36 → 48px, medium (Read, Give, About, an article)
     text-headline section headings          30 → 40px, medium
     text-title    card and list headings    18 → 20px, semibold
     text-lead     intro paragraphs          17 → 20px
@@ -75,6 +76,11 @@
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.03em;
   --text-display--font-weight: 500;
+
+  --text-page: clamp(2.25rem, 1.9rem + 1.1vw, 3rem);
+  --text-page--line-height: 1.06;
+  --text-page--letter-spacing: -0.025em;
+  --text-page--font-weight: 500;
 
   --text-headline: clamp(1.875rem, 1.5rem + 1.25vw, 2.5rem);
   --text-headline--line-height: 1.1;

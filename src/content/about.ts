@@ -122,18 +122,52 @@ export type BoardMember = {
   role: string;
   /** A sentence about them, optional. */
   bio?: string;
-  /** A portrait, upright (4:5). Without one, a placeholder is shown. */
+  /** A head-and-shoulders portrait, upright (4:5). Without one, an outline of a person is shown. */
   photo?: Photo;
 };
 
-/** PLACEHOLDERS: add each board member's name, role and portrait. */
+/**
+ * SAMPLE BOARD: placeholder people (stock photos from Unsplash, made-up names and bios) so the
+ * page looks as it will. Replace every entry with the real board: name, role, a line about
+ * them and a head-and-shoulders portrait (upright, face near the top; put it in public/about/).
+ */
 export const board: BoardMember[] = [
-  { name: "Name to come", role: "President" },
-  { name: "Name to come", role: "Vice president" },
-  { name: "Name to come", role: "Secretary" },
-  { name: "Name to come", role: "Treasurer" },
-  { name: "Name to come", role: "Board member" },
-  { name: "Name to come", role: "Board member" },
+  {
+    name: "Rev. Daniel Asante",
+    role: "President & Senior Pastor",
+    bio: "Leads the fellowship and teaches through the Tuesday series.",
+    photo: unsplash("1588178454780-441fa5b99fa5", "Daniel Asante", "man-in-black-suit-jacket-0OczC2-oFsA"),
+  },
+  {
+    name: "Grace Owusu-Ansah",
+    role: "Vice President",
+    bio: "Oversees pastoral care and the prayer team.",
+    photo: unsplash("1697063882499-f7fca7d2d713", "Grace Owusu-Ansah", "a-woman-in-a-black-top-smiling-at-the-camera-PaLmM"),
+  },
+  {
+    name: "Samuel Boateng",
+    role: "Secretary",
+    bio: "Keeps the board’s records and the fellowship’s calendar.",
+    photo: unsplash("1650490323009-96fc950a959c", "Samuel Boateng", "a-man-in-a-suit-and-tie-smiling-5HvKJ0Zit_8"),
+  },
+  {
+    name: "Akosua Mensah",
+    role: "Treasurer",
+    bio: "Stewards the fellowship’s giving and its accounts.",
+    photo: unsplash("1573497491765-dccce02b29df", "Akosua Mensah", "woman-in-gray-and-yellow-pussybow-top-_5_CBVCLBsY"),
+  },
+  {
+    name: "Emmanuel Darko",
+    role: "Board Member",
+    bio: "Leads Jericho Hour and the monthly prayer nights.",
+    photo: unsplash("1657218380188-40c56bfdf97f", "Emmanuel Darko", "a-man-smiling-for-the-camera-_WHmeGzrqvs"),
+  },
+  {
+    name: "Abena Ofori",
+    role: "Board Member",
+    bio: "Looks after youth and young adults across the fellowship.",
+    photo: unsplash("1632612721400-0a337458b7ed", "Abena Ofori", "a-smiling-woman-with-braids-and-a-black-shirt-eJ5l2jepIQA"),
+  },
 ];
 
 /** The invitation at the bottom of the page. */

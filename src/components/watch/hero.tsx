@@ -84,7 +84,7 @@ function LiveHero({ videoId, title, viewers, startedAt }: { videoId: string; tit
         <span className="block text-sm font-medium text-white/80">
           We’re live now{startedAt && <> · <StartedAgo at={startedAt} /></>}
         </span>
-        <span className="mt-3 block max-w-[20ch] text-[clamp(2.25rem,1.35rem+2.8vw,4.5rem)] font-normal leading-[1.02] tracking-[-0.035em] text-balance">
+        <span className="mt-3 block max-w-[22ch] text-page text-balance">
           {title || "Join us live"}
         </span>
         <span className="mt-8 flex flex-wrap items-center gap-3">

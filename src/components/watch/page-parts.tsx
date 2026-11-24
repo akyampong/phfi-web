@@ -8,7 +8,7 @@ export function PageIntro({ title, children, after }: { title: string; children:
   return (
     <header className="flex flex-col gap-8">
       <div>
-        <h1 className="text-display text-ink">{title}</h1>
+        <h1 className="text-page text-ink">{title}</h1>
         <p className={`mt-5 max-w-[52ch] ${bodyText}`}>{children}</p>
       </div>
       {after}
