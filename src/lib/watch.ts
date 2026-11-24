@@ -2,7 +2,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import type { ArtSpec, Motif, Palette } from "@/components/art/artwork";
 import { meetingSchedule, meetingTimeZoneId } from "@/config/site";
-import { sampleMessages, seriesDetails, videoDetails, type PosterMotif, type SeriesDetails } from "@/content/watch";
+import { channelSeries, sampleMessages, seriesDetails, videoDetails, type PosterMotif, type SeriesDetails } from "@/content/watch";
 import { findScripture } from "@/lib/bible";
 import { occurrencesBetween, wallDate } from "@/lib/schedule";
 import type { Catalogue, Chapter, Message, Series } from "@/lib/watch-types";
@@ -22,7 +22,10 @@ export async function getCatalogue(): Promise<Catalogue> {
   // Development only: show the full sample library even with a channel connected, to see
   // the pages with plenty in them.
   const samples = process.env.NODE_ENV !== "production" && process.env.WATCH_PREVIEW_SAMPLES === "1";
-  return loadCatalogue(samples ? "" : (process.env.YOUTUBE_CHANNEL_ID ?? ""));
+  // WATCH_CHANNEL_ID fills the Watch pages from another channel (for a presentation, say),
+  // while the live check stays on YOUTUBE_CHANNEL_ID.
+  const channel = process.env.WATCH_CHANNEL_ID || process.env.YOUTUBE_CHANNEL_ID || "";
+  return loadCatalogue(samples ? "" : channel);
 }
 
 export async function getMessage(slug: string): Promise<Message | undefined> {
@@ -45,6 +48,8 @@ export async function getSeries(slug: string): Promise<Series | undefined> {
 const RESERVED_SLUGS = new Set(["series", "clips"]);
 /** At most this many of the newest videos are listed (4 pages of 50). */
 const MAX_VIDEOS = 200;
+/** How much of a series' playlist is read, so recent parts of a long series are found. */
+const SERIES_PLAYLIST_LIMIT = 400;
 
 /** The last catalogue fetched successfully, kept in case YouTube can't be reached on a refresh. */
 let lastGood: Catalogue | undefined;
@@ -61,11 +66,13 @@ async function loadCatalogue(channelId: string): Promise<Catalogue> {
 
   try {
     const videos = await fetchUploads(channelId, key);
+    // The series set up for every channel, plus any for this channel in particular
+    const known = [...seriesDetails, ...(channelSeries[channelId] ?? [])];
     const playlists = new Map<string, string[]>();
-    for (const series of seriesDetails) {
-      if (series.playlistId) playlists.set(series.slug, await fetchPlaylist(series.playlistId, key));
+    for (const series of known) {
+      if (series.playlistId) playlists.set(series.slug, await fetchPlaylist(series.playlistId, key, SERIES_PLAYLIST_LIMIT));
     }
-    const catalogue = buildCatalogue(videos, playlists);
+    const catalogue = buildCatalogue(videos, playlists, known);
     cacheLife({ stale: 300, revalidate: 900, expire: 86_400 });
     if (catalogue.messages.length === 0) return sampleCatalogue();
     lastGood = catalogue;
@@ -148,7 +155,7 @@ async function fetchUploads(channelId: string, key: string): Promise<Video[]> {
 
 // ——— Building the catalogue ———
 
-function buildCatalogue(videos: Video[], playlists: Map<string, string[]>): Catalogue {
+function buildCatalogue(videos: Video[], playlists: Map<string, string[]>, known: SeriesDetails[]): Catalogue {
   const usable = videos.filter(
     (v) =>
       // Not live or scheduled (the live page has those), public, and not hidden in content/watch.ts
@@ -159,15 +166,21 @@ function buildCatalogue(videos: Video[], playlists: Map<string, string[]>): Cata
   for (const [slug, ids] of playlists) for (const id of ids) if (!playlistSeries.has(id)) playlistSeries.set(id, slug);
 
   const adHocSeries = new Map<string, SeriesDetails>();
-  const messages = usable.map((video) => toMessage(video, playlistSeries, adHocSeries));
+  const messages = usable.map((video) => toMessage(video, playlistSeries, adHocSeries, known));
   assignSlugs(messages);
-  return { messages: sortNewestFirst(messages), series: buildSeries(messages, playlists, adHocSeries), source: "youtube" };
+  return { messages: sortNewestFirst(messages), series: buildSeries(messages, playlists, adHocSeries, known), source: "youtube" };
 }
 
-const TAG = /^(scripture|passage|series|speaker|preacher|meeting)\s*[:：]\s*(.+)$/i;
+// "Label: value" lines read from a description. Playlist and episode lines are just hidden.
+const TAG = /^(scripture|passage|series|speaker|preacher|teacher|meeting|playlist|episode)\s*[:：]\s*(.+)$/i;
 const TIMESTAMP = /^[([]?((?:\d{1,2}:)?\d{1,2}:\d{2})[)\]]?\s*[-–—:|.]?\s+(.+)$/;
 
-function toMessage(video: Video, playlistSeries: Map<string, string>, adHocSeries: Map<string, SeriesDetails>): Message {
+function toMessage(
+  video: Video,
+  playlistSeries: Map<string, string>,
+  adHocSeries: Map<string, SeriesDetails>,
+  known: SeriesDetails[],
+): Message {
   const details = videoDetails[video.id] ?? {};
   const { title: youtubeTitle, description: raw } = video.snippet;
   const title = details.title ?? cleanTitle(youtubeTitle);
@@ -202,7 +215,7 @@ function toMessage(video: Video, playlistSeries: Map<string, string>, adHocSerie
   const recordedAt = video.liveStreamingDetails?.actualStartTime;
 
   const seriesName = details.series ?? tags.series;
-  const series = seriesName ? findOrAddSeries(seriesName, adHocSeries) : playlistSeries.get(video.id);
+  const series = seriesName ? findOrAddSeries(seriesName, adHocSeries, known) : playlistSeries.get(video.id);
 
   const thumb = video.snippet.thumbnails;
   const image = thumb.maxres ?? thumb.standard ?? thumb.high ?? thumb.medium;
@@ -219,7 +232,8 @@ function toMessage(video: Video, playlistSeries: Map<string, string>, adHocSerie
     speaker: details.speaker ?? tags.speaker,
     // Filled in with the part numbers once the series are put together.
     series: series ? { slug: series, title: "", part: details.part ?? 0, of: 0 } : undefined,
-    summary: details.summary ?? summarise(description[0] ?? ""),
+    // The first paragraph that's more than a link (descriptions often open with links)
+    summary: details.summary ?? summarise(description.find((p) => p.replace(LINK, "").trim().length > 0)?.replace(LINK, "").trim() ?? ""),
     description,
     chapters: hasChapters ? chapters : [],
     image: image ? { src: image.url, alt: "" } : undefined,
@@ -229,9 +243,15 @@ function toMessage(video: Video, playlistSeries: Map<string, string>, adHocSerie
   };
 }
 
+const LINK = /https?:\/\/\S+/g;
+
+function escapeRegExp(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function normaliseTag(name: string) {
   const lower = name.toLowerCase();
-  return lower === "passage" ? "scripture" : lower === "preacher" ? "speaker" : lower;
+  return lower === "passage" ? "scripture" : lower === "preacher" || lower === "teacher" ? "speaker" : lower;
 }
 
 /** Drops hashtags and trailing "| PHFI"-style labels from a YouTube title. */
@@ -300,10 +320,10 @@ function inferMeeting(start: Date) {
   return match?.meeting.name;
 }
 
-function findOrAddSeries(name: string, adHoc: Map<string, SeriesDetails>) {
+function findOrAddSeries(name: string, adHoc: Map<string, SeriesDetails>, known: SeriesDetails[]) {
   const wanted = slugify(name);
-  const known = seriesDetails.find((s) => s.slug === wanted || slugify(s.title) === wanted);
-  if (known) return known.slug;
+  const match = known.find((s) => s.slug === wanted || slugify(s.title) === wanted);
+  if (match) return match.slug;
   // A series named only in YouTube descriptions gets a page too.
   if (!adHoc.has(wanted)) adHoc.set(wanted, { slug: wanted, title: name.trim(), description: "", ...posterFor(wanted) });
   return wanted;
@@ -327,8 +347,13 @@ function assignSlugs(messages: Message[]) {
   }
 }
 
-function buildSeries(messages: Message[], playlists: Map<string, string[]>, adHoc: Map<string, SeriesDetails>): Series[] {
-  const all = [...seriesDetails, ...adHoc.values()];
+function buildSeries(
+  messages: Message[],
+  playlists: Map<string, string[]>,
+  adHoc: Map<string, SeriesDetails>,
+  known: SeriesDetails[],
+): Series[] {
+  const all = [...known, ...adHoc.values()];
   const result: Series[] = [];
   for (const details of all) {
     const order = playlists.get(details.slug);
@@ -342,6 +367,15 @@ function buildSeries(messages: Message[], playlists: Map<string, string[]>, adHo
         return a.date.localeCompare(b.date);
       });
     if (parts.length === 0) continue;
+    // Some playlists list the newest first: part 1 should still be the earliest.
+    if (order && parts.length > 1 && parts[0].date > parts[parts.length - 1].date) parts.reverse();
+    // "Jesus Prays for Us – Solid Joys Daily Devotional" → "Jesus Prays for Us": the series is
+    // shown beside it anyway.
+    const repeated = new RegExp(`\\s*[–—|-]\\s*${escapeRegExp(details.title)}.*$`, "i");
+    for (const m of parts) {
+      const shorter = m.title.replace(repeated, "").trim();
+      if (shorter && shorter !== m.title && !(m.videoId && videoDetails[m.videoId]?.title)) m.title = shorter;
+    }
     parts.forEach((m, i) => (m.series = { slug: details.slug, title: details.title, part: i + 1, of: parts.length }));
     result.push({
       slug: details.slug,
@@ -418,5 +452,5 @@ function sampleCatalogue(): Catalogue {
     vertical: s.kind === "clip",
     embeddable: true,
   }));
-  return { messages: sortNewestFirst(messages), series: buildSeries(messages, new Map(), new Map()), source: "sample" };
+  return { messages: sortNewestFirst(messages), series: buildSeries(messages, new Map(), new Map(), seriesDetails), source: "sample" };
 }

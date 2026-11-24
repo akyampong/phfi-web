@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageTransition } from "@/components/layout/page-transition";
-import { ClipCard, MessageCard, SeriesPoster } from "@/components/watch/cards";
+import { MessageCard } from "@/components/watch/cards";
 import { WatchHero } from "@/components/watch/hero";
-import { LatestHero } from "@/components/watch/latest-hero";
 import { Library, MessageGrid } from "@/components/watch/library";
 import { EmptyState } from "@/components/watch/page-parts";
 import { Shelf } from "@/components/watch/shelf";
@@ -20,60 +19,53 @@ export const metadata: Metadata = {
 const ROW = 12;
 const videoSizes = "(min-width: 1504px) 340px, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 46vw, 82vw";
 
+/** How many of the newest messages lead the page, larger. */
+const LATEST = 3;
+
 /**
- * The Watch page, laid out like a streaming app: the latest message large at the top (or,
- * while a meeting is on, the live stream itself), then rows to browse: the latest messages,
- * the series, clips, and each meeting's recordings. Everything is
- * listed at the bottom too, by meeting. Built from the YouTube channel (see lib/watch.ts).
+ * The Watch page: while a meeting is on, the live stream at the top; then the three latest
+ * messages, large; a row for each meeting's recordings (when there's more than one meeting to
+ * tell apart); and the rest, five to a row, by meeting. Built from the YouTube channel (see
+ * lib/watch.ts).
  */
 export default async function WatchPage() {
-  const { messages, series } = await getCatalogue();
+  const { messages } = await getCatalogue();
   const full = messages.filter((m) => m.kind === "message");
-  const clips = messages.filter((m) => m.kind === "clip");
   const meetings = meetingSchedule.filter((meeting) => full.some((m) => m.meeting === meeting.name));
 
   return (
     <PageTransition>
       <div className="container-page pb-12 md:pb-16 lg:pb-20">
         <h1 className="sr-only">Watch</h1>
-        {/* Everything, the hero included, sits in the 1440px reading column */}
+        {/* Everything, the live preview included, sits in the 1440px reading column */}
         <div className="content-width flex flex-col gap-16 pt-2 md:gap-20 md:pt-4 lg:gap-24">
-          <WatchHero>{full[0] ? <LatestHero message={full[0]} /> : null}</WatchHero>
+          <WatchHero />
+
+          {full.length > 0 && (
+            <section aria-labelledby="latest-title">
+              <h2 id="latest-title" className="text-headline text-ink">
+                Latest messages
+              </h2>
+              <ul className="mt-8 grid gap-x-6 gap-y-10 md:grid-cols-3 lg:mt-10 lg:gap-x-8">
+                {full.slice(0, LATEST).map((m, i) => (
+                  <li key={m.slug}>
+                    <MessageCard
+                      message={m}
+                      large
+                      withSummary
+                      preload={i === 0}
+                      sizes="(min-width: 1504px) 460px, (min-width: 768px) 33vw, 100vw"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {messages.length === 0 && (
             <EmptyState title="Messages are on their way">
               Recordings of our meetings will appear here after each one. Until then, join us live.
             </EmptyState>
-          )}
-
-          {full.length > 1 && (
-            <Shelf id="latest-title" title="Latest messages" size="video" href={full.length > ROW ? "#all" : undefined}>
-              {full.slice(0, ROW).map((m) => (
-                <li key={m.slug}>
-                  <MessageCard message={m} sizes={videoSizes} />
-                </li>
-              ))}
-            </Shelf>
-          )}
-
-          {series.length > 0 && (
-            <Shelf id="series-title" title="Series" size="poster" href={series.length > 5 ? "/watch/series" : undefined}>
-              {series.map((s) => (
-                <li key={s.slug}>
-                  <SeriesPoster series={s} sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 37vw, 62vw" />
-                </li>
-              ))}
-            </Shelf>
-          )}
-
-          {clips.length > 0 && (
-            <Shelf id="clips-title" title="Clips" detail="A minute to watch and pass on" size="clip" href="/watch/clips">
-              {clips.slice(0, ROW).map((clip) => (
-                <li key={clip.slug}>
-                  <ClipCard clip={clip} sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 640px) 29vw, 42vw" />
-                </li>
-              ))}
-            </Shelf>
           )}
 
           {/* A row for each meeting, when there's more than one to tell apart */}
@@ -98,15 +90,15 @@ export default async function WatchPage() {
               );
             })}
 
-          {full.length > 0 && (
+          {full.length > LATEST && (
             // The address can point here directly: /watch?meeting=jericho-hour#all
             <section id="all" aria-labelledby="all-title" className="scroll-mt-24">
               <h2 id="all-title" className="text-headline text-ink">
-                All messages
+                More messages
               </h2>
               <div className="mt-6 md:mt-8">
-                <Suspense fallback={<MessageGrid messages={full.slice(0, 12)} />}>
-                  <Library messages={full} meetings={meetings.map((m) => m.name)} />
+                <Suspense fallback={<MessageGrid messages={full.slice(LATEST, LATEST + 15)} />}>
+                  <Library messages={full} meetings={meetings.map((m) => m.name)} skip={LATEST} />
                 </Suspense>
               </div>
             </section>

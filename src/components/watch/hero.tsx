@@ -1,13 +1,11 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { CalendarClock, Radio } from "lucide-react";
-import { StartedAgo, describeOccurrence, useNow } from "@/components/live/schedule";
+import { Radio } from "lucide-react";
+import { StartedAgo } from "@/components/live/schedule";
 import { onImageButton } from "@/components/ui/styles";
-import { meetingSchedule } from "@/config/site";
 import { useLiveStatus } from "@/lib/live-status";
-import { upcomingMeetings } from "@/lib/schedule";
 import { useUnloadWhenHidden } from "@/lib/use-unload-when-hidden";
 
 /** The frame both heroes share: the reading column's width, nearly a screen tall. */
@@ -15,15 +13,13 @@ export const heroFrame =
   "relative flex h-[clamp(32rem,calc(100svh-9rem),52rem)] w-full flex-col overflow-hidden rounded-squircle-lg bg-night";
 
 /**
- * The top of /watch. While a meeting is streaming, the stream itself, playing silently as a
- * preview, with a way in to join; the rest of the time `children` (the latest message).
+ * The top of /watch while a meeting is streaming: the stream itself, playing silently as a
+ * preview, with a way in to join. Nothing the rest of the time.
  */
-export function WatchHero({ children }: { children: ReactNode }) {
+export function WatchHero() {
   const status = useLiveStatus();
-  if (status.live && status.videoId) {
-    return <LiveHero videoId={status.videoId} title={status.title} viewers={status.viewers} startedAt={status.startedAt} />;
-  }
-  return children;
+  if (!status.live || !status.videoId) return null;
+  return <LiveHero videoId={status.videoId} title={status.title} viewers={status.viewers} startedAt={status.startedAt} />;
 }
 
 function LiveHero({ videoId, title, viewers, startedAt }: { videoId: string; title?: string; viewers?: number; startedAt?: string }) {
@@ -96,25 +92,5 @@ function LiveHero({ videoId, title, viewers, startedAt }: { videoId: string; tit
         </span>
       </span>
     </Link>
-  );
-}
-
-/**
- * When the next meeting goes live, in the visitor's own time zone: "Next live · Tuesday 24
- * November at 7:00 PM". Filled in by the browser (it knows the visitor's zone).
- */
-export function NextLive({ className = "" }: { className?: string }) {
-  const now = useNow();
-  const next = now ? upcomingMeetings(meetingSchedule, now)[0] : undefined;
-  if (!next) return null;
-  return (
-    <span
-      className={`live-appear inline-flex items-center gap-2 rounded-squircle-xs bg-black/30 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md ${className}`}
-    >
-      <CalendarClock aria-hidden className="size-3.5" />
-      <span>
-        Next live: {next.meeting.name}, {describeOccurrence(next)}
-      </span>
-    </span>
   );
 }

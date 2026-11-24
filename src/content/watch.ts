@@ -74,6 +74,41 @@ export const seriesDetails: SeriesDetails[] = [
   },
 ];
 
+/**
+ * Series for a particular channel, by its channel ID: used only while the Watch pages show
+ * that channel (WATCH_CHANNEL_ID). For a presentation, the Desiring God channel's playlists
+ * stand in for PHFI's series. Delete these when WATCH_CHANNEL_ID is no longer set.
+ */
+export const channelSeries: Record<string, SeriesDetails[]> = {
+  // Desiring God (youtube.com/@desiringGod)
+  UCnrFlpro0xfYjz6s5Xa8WWw: [
+    {
+      slug: "look-at-the-book-1-corinthians",
+      title: "Look at the Book: 1 Corinthians",
+      description: "Walking slowly through 1 Corinthians, a passage at a time, learning to see what’s really there.",
+      colour: "#1e6447",
+      motif: "rings",
+      playlistId: "PLAcB0f-21Xj3RbXYhQKE8AMTKZ8eMDmnz",
+    },
+    {
+      slug: "solid-joys",
+      title: "Solid Joys",
+      description: "A short, substantive daily devotional to feed your joy in Jesus every day of the year.",
+      colour: "#8a4b12",
+      motif: "sunset",
+      playlistId: "PLAcB0f-21Xj00jrr64syLntNzSUHyDpPc",
+    },
+    {
+      slug: "light-and-truth",
+      title: "Light + Truth",
+      description: "Classic sermons from John Piper, to help you see Christ clearly and treasure him truly.",
+      colour: "#18505e",
+      motif: "rays",
+      playlistId: "PLAcB0f-21Xj1iDbRld7wz03727YR8DiDi",
+    },
+  ],
+};
+
 export type VideoDetails = {
   /** A different address from the one made from the title. Keep it once shared: old links rely on it. */
   slug?: string;

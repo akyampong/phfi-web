@@ -19,16 +19,19 @@ export function MessageCard({
   sizes,
   preload = false,
   withSummary = false,
+  large = false,
 }: {
   message: Message;
   sizes: string;
   preload?: boolean;
   /** Add a line or two about it (in the full list; rows keep to the title and date). */
   withSummary?: boolean;
+  /** Larger: rounder picture and a bigger title, for the latest messages at the top of /watch. */
+  large?: boolean;
 }) {
   return (
     <Link href={`/watch/${message.slug}`} className="group block">
-      <span className="relative block aspect-video overflow-hidden rounded-squircle-sm bg-canvas">
+      <span className={`relative block aspect-video overflow-hidden bg-canvas ${large ? "rounded-squircle-md" : "rounded-squircle-sm"}`}>
         <Cover
           photo={message.image}
           art={message.art}
@@ -43,8 +46,13 @@ export function MessageCard({
           </span>
         )}
       </span>
-      <span className="mt-4 block">
-        <h3 className="text-title text-ink">
+      <span className={`block ${large ? "mt-5" : "mt-4"}`}>
+        {/* One line, ending in "…" when it's longer; the whole title shows on hover */}
+        <h3
+          title={message.title}
+          // Room below for the hover underline, which the one-line clip would otherwise cut off
+          className={`line-clamp-1 pb-[0.2em] ${large ? "text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] font-medium leading-snug tracking-[-0.015em] text-ink" : "text-title text-ink"}`}
+        >
           <span className={groupUnderline}>{message.title}</span>
         </h3>
         <p className={`mt-2 ${metaCaps}`}>
