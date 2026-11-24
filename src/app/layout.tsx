@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeScript } from "@/components/layout/theme-script";
+import { Drawers } from "@/components/drawers/drawers";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -47,6 +48,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        {/* The prayer request and contact forms: open from any "#pray" or "#contact" link */}
+        <Drawers />
       </body>
     </html>
   );

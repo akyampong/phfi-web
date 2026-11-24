@@ -7,7 +7,7 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { ShareButton } from "@/components/ui/share-button";
 import { actionButton, bodyText, metaCaps } from "@/components/ui/styles";
 import { MessageRow } from "@/components/watch/cards";
-import { Breadcrumbs } from "@/components/watch/page-parts";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Chapters, Player, PlayerProvider } from "@/components/watch/player";
 import { RichText } from "@/components/watch/rich-text";
 import { TRANSLATION, bibleComUrl } from "@/lib/bible";

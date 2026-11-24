@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { Reveal } from "@/components/ui/reveal";
 import { SeriesPoster } from "@/components/watch/cards";
-import { Breadcrumbs, EmptyState, PageIntro } from "@/components/watch/page-parts";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { EmptyState, PageIntro } from "@/components/watch/page-parts";
 import { getCatalogue } from "@/lib/watch";
 
 export const metadata: Metadata = {

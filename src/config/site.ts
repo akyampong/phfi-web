@@ -17,9 +17,8 @@ export const siteConfig = {
 export const mainNav: NavItem[] = [
   { label: "Watch", href: "/watch", match: ["/live", "/podcast"], showsLive: true },
   { label: "Read", href: "/read", match: ["/topics", "/scripture"] },
-  { label: "Connect", href: "/connect", match: ["/new", "/prayer", "/events"] },
   { label: "Give", href: "/give" },
-  { label: "About", href: "/about", match: ["/contact"] },
+  { label: "About", href: "/about" },
 ];
 
 export const footerNav: { title: string; links: NavItem[] }[] = [
@@ -36,16 +35,7 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     title: "Read",
     links: [
       { label: "Articles", href: "/read" },
-      { label: "Topics", href: "/topics" },
-    ],
-  },
-  {
-    title: "Connect",
-    links: [
-      { label: "New here?", href: "/new" },
-      { label: "Prayer request", href: "/prayer" },
-      { label: "Events", href: "/events" },
-      { label: "Contact", href: "/contact" },
+      { label: "Topics", href: "/read#all" },
     ],
   },
   {
@@ -55,6 +45,9 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
       { label: "What we believe", href: "/about#beliefs" },
       { label: "Leadership", href: "/about#leadership" },
       { label: "Give", href: "/give" },
+      // These two open the prayer request and contact drawers
+      { label: "Prayer request", href: "#pray" },
+      { label: "Contact", href: "#contact" },
     ],
   },
 ];

@@ -100,9 +100,10 @@ export const community = {
   ],
   /** Ways to take part, beside the photos. */
   ways: [
-    { title: "Pray with us", text: "Send a request and our prayer team will carry it with you.", href: "/prayer" },
-    { title: "Say hello", text: "New here? We’d love to meet you and help you find your place.", href: "/new" },
-    { title: "Serve", text: "From prayer to production, there’s a place for your gifts.", href: "/connect" },
+    // "#pray" opens the prayer request drawer
+    { title: "Pray with us", text: "Send a request and our prayer team will carry it with you.", href: "#pray" },
+    { title: "Watch together", text: "Catch up on any message, and share one with someone who needs it.", href: "/watch" },
+    { title: "Give", text: "Help the fellowship keep gathering, caring and reaching further.", href: "/give" },
   ],
 };
 

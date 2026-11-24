@@ -89,7 +89,7 @@ export function ThisWeek({ week }: { week: ThisWeekData }) {
               </li>
             ))}
           </ol>
-          <Link href="/prayer" className={`${buttonPrimary} mt-9`}>
+          <Link href="#pray" className={`${buttonPrimary} mt-9`}>
             Send a prayer request
           </Link>
         </Reveal>

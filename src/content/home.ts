@@ -201,9 +201,9 @@ export const nextSteps: {
 }[] = [
   {
     label: "New here?",
-    title: "Start with a conversation.",
-    action: "Say hello",
-    href: "/new",
+    title: "Start by getting to know us.",
+    action: "About us",
+    href: "/about",
     art: { motif: "sunset", palette: "ember" },
     photo: unsplash(
       "1640037984424-ac1a02cb742a",
@@ -215,7 +215,8 @@ export const nextSteps: {
     label: "Prayer",
     title: "Share it, and we’ll pray with you.",
     action: "Send a request",
-    href: "/prayer",
+    // Opens the prayer request drawer
+    href: "#pray",
     art: { motif: "arch", palette: "dusk" },
     photo: unsplash(
       "1778784534336-ef8e8ec6ad7c",
@@ -269,7 +270,7 @@ export const heroSlides: HeroSlide[] = [
     headline: "A home for your faith,\nwherever you are",
     text: "Live fellowship every Tuesday and Thursday:\nworship, prayer and the Bible, together online.",
     primary: { label: "Join us live", href: "/live", liveOnly: true },
-    secondary: { label: "New here?", href: "/new" },
+    secondary: { label: "New here?", href: "/about" },
     photo: {
       src: "/assets/bg.avif",
       alt: "Hands raised in worship under blue stage light",
@@ -295,7 +296,8 @@ export const heroSlides: HeroSlide[] = [
     headline: "Jericho\nHour",
     text: "Our end-of-month prayer meeting: two hours\nof prayer together, to close the month well.",
     primary: { label: "See meeting times", href: "/#meeting-times" },
-    secondary: { label: "Learn more", href: "/connect" },
+    // Opens the prayer request drawer
+    secondary: { label: "Send a prayer request", href: "#pray" },
     photo: {
       src: "/assets/bg-2.avif",
       alt: "Deep blue paint in thick brushstrokes",
@@ -343,9 +345,10 @@ export const ways: Way[] = [
   {
     icon: "connect",
     title: "Get Connected",
-    text: "Meet the people behind the screens, find events and take a next step with us.",
-    action: "Get connected",
-    href: "/connect",
+    text: "Questions, ideas or just hello: get in touch with the people behind the screens.",
+    action: "Get in touch",
+    // Opens the contact drawer
+    href: "#contact",
   },
 ];
 

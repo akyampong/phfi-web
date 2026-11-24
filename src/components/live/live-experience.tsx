@@ -80,7 +80,7 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
 
         <div className="flex flex-wrap items-center gap-2">
           <ShareButton title={title} path="/live" />
-          <Link href="/prayer" className={actionButton}>
+          <Link href="#pray" className={actionButton}>
             <HandHeart aria-hidden className="size-4" />
             Prayer request
           </Link>
@@ -241,7 +241,7 @@ function PrayAlong({ week }: { week: ThisWeek }) {
         </ol>
       </div>
       <Link
-        href="/prayer"
+        href="#pray"
         className="inline-flex h-10 items-center justify-center self-start rounded-squircle-xs bg-ink px-4 text-sm font-semibold text-paper transition-[background-color,scale] duration-200 hover:bg-ink/85 active:scale-[0.98]"
       >
         Send a prayer request

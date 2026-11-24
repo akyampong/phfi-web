@@ -9,7 +9,7 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { Reveal } from "@/components/ui/reveal";
 import { ShareButton } from "@/components/ui/share-button";
 import { groupUnderline, metaCaps, onImageButton, onImageGlassButton } from "@/components/ui/styles";
-import { Breadcrumbs } from "@/components/watch/page-parts";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { formatDate, formatShortDate } from "@/lib/format";
 import { getCatalogue, getSeries } from "@/lib/watch";
 import { formatLength, type Message } from "@/lib/watch-types";

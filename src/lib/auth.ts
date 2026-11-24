@@ -9,6 +9,10 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "sqlite", schema }),
   emailAndPassword: {
     enabled: true,
+    // No public sign-up: accounts are for the PHFI team (the prayer and message inbox), and
+    // are created with scripts/add-team-member.ts. Otherwise anyone could register with a
+    // team member's address before they do.
+    disableSignUp: true,
   },
   session: {
     // Keep a short-lived copy of the session in a signed cookie,

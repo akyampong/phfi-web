@@ -80,8 +80,8 @@ function Intro() {
           <Link href="/#meeting-times" className={buttonPrimary}>
             Meeting times
           </Link>
-          <Link href="/new" className={buttonSecondary}>
-            New here?
+          <Link href="/watch" className={buttonSecondary}>
+            Watch a message
           </Link>
         </div>
       </div>
@@ -322,8 +322,9 @@ function Closing() {
           <Link href="/#meeting-times" className={onImageButton}>
             See meeting times
           </Link>
-          <Link href="/new" className={onImageGlassButton}>
-            New here?
+          {/* Opens the prayer request drawer */}
+          <Link href="#pray" className={onImageGlassButton}>
+            Send a prayer request
           </Link>
         </div>
       </div>
