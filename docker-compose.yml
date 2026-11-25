@@ -1,7 +1,7 @@
 # Local Postgres for development: `bun run db:up` starts it, `bun run db:down` stops it.
 # The data lives in the phfi-db volume, so it survives restarts. Its password comes from
-# POSTGRES_PASSWORD in .env.local (`bun run db:up` passes it in); the live database has its own
-# (DATABASE_URL in the host's settings).
+# POSTGRES_PASSWORD in .env.local (`bun run db:up` passes it in; see .env.example). The live
+# database has its own (DATABASE_URL in the host's settings).
 services:
   db:
     image: postgres:17-alpine
@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: phfi
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.local, see .env.example}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: phfi
     ports:
       - "5432:5432"
