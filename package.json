@@ -10,8 +10,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "auth:generate": "bunx auth@latest generate --config src/lib/auth.ts --output src/db/auth-schema.ts --yes",
-    "db:up": "docker compose up -d --wait db",
-    "db:down": "docker compose stop db",
+    "db:up": "docker compose --env-file .env.local up -d --wait db",
+    "db:down": "docker compose --env-file .env.local stop db",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"

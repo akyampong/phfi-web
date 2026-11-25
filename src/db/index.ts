@@ -8,11 +8,13 @@ import * as schema from "./schema";
  * One pool per server process: in development, kept on globalThis so reloading code doesn't
  * open a new pool each time.
  */
+if (!process.env.DATABASE_URL) console.warn("DATABASE_URL isn't set: copy it from .env.example into .env.local.");
+
 const globalForDb = globalThis as unknown as { pool?: Pool };
 const pool =
   globalForDb.pool ??
   new Pool({
-    connectionString: process.env.DATABASE_URL ?? "postgres://phfi:phfi@localhost:5432/phfi",
+    connectionString: process.env.DATABASE_URL,
     max: 10,
   });
 if (process.env.NODE_ENV !== "production") globalForDb.pool = pool;
