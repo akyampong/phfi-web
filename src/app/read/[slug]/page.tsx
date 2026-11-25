@@ -7,6 +7,7 @@ import { Cover } from "@/components/art/cover";
 import { PageTransition } from "@/components/layout/page-transition";
 import { ArticleCard } from "@/components/read/cards";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { SaveButton } from "@/components/ui/save-button";
 import { ShareButton } from "@/components/ui/share-button";
 import { actionButton, metaCaps } from "@/components/ui/styles";
 import type { Article } from "@/lib/article-types";
@@ -94,7 +95,8 @@ async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">
                   <span className="sr-only"> ({TRANSLATION}, on Bible.com)</span>
                 </a>
               )}
-              <ShareButton title={article.title} path={`/read/${article.slug}`} />
+              <SaveButton kind="article" slug={article.slug} />
+                  <ShareButton title={article.title} path={`/read/${article.slug}`} />
             </div>
           </header>
 

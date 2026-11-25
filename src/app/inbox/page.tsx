@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { Check, Mail, RotateCcw } from "lucide-react";
+import { SignInPrompt } from "@/components/auth/sign-in-prompt";
 import { actionButton } from "@/components/ui/styles";
 import { meetingTimeZoneId } from "@/config/site";
 import { db } from "@/db";
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 /**
  * The team's inbox: prayer requests and messages from the drawers (components/drawers), newest
- * first. Only for signed-in team members (TEAM_EMAILS); everyone else is sent to sign in, or
+ * first. Only for signed-in team members (TEAM_EMAILS); everyone else is asked to sign in, or
  * told it's private.
  */
 export default function InboxPage({ searchParams }: PageProps<"/inbox">) {
@@ -42,7 +42,7 @@ const KINDS = { all: "Everything", prayer: "Prayer requests", contact: "Messages
 async function Inbox({ searchParams }: Pick<PageProps<"/inbox">, "searchParams">) {
   await connection();
   const session = await getSession();
-  if (!session) redirect("/sign-in?next=/inbox");
+  if (!session) return <SignInPrompt title="Sign in to the inbox" text="Prayer requests and messages are for the Purpose House team. Sign in with your team email to read them." />;
   if (!isTeamEmail(session.user.email)) {
     return (
       <div className="flex min-h-[50svh] flex-col justify-center">
@@ -72,7 +72,7 @@ async function Inbox({ searchParams }: Pick<PageProps<"/inbox">, "searchParams">
       .orderBy(desc(message.createdAt))
       .limit(200),
     db
-      .select({ fresh: sql<number>`sum(case when ${message.status} = 'new' then 1 else 0 end)` })
+      .select({ fresh: sql<number>`count(*) filter (where ${message.status} = 'new')`.mapWith(Number) })
       .from(message),
   ]);
 

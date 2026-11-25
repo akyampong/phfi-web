@@ -43,19 +43,18 @@ export function ArticleCard({ article, sizes }: { article: ArticleSummary; sizes
 export function FeaturedArticle({ article }: { article: ArticleSummary }) {
   const href = `/read/${article.slug}`;
   return (
-    <section aria-labelledby="featured-article-title" className="grid items-center gap-8 lg:grid-cols-12 lg:gap-16">
+    <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-16">
       <Link href={href} tabIndex={-1} aria-hidden className="group relative block aspect-[16/10] overflow-hidden rounded-squircle-md bg-canvas lg:col-span-7">
         <Cover photo={article.photo} art={article.art} uid="featured-article" sizes="(min-width: 1504px) 820px, (min-width: 1024px) 55vw, 100vw" preload className={zoom} />
       </Link>
       <div className="lg:col-span-5">
-        <p className={metaCaps}>
-          Latest{article.topics[0] && ` · ${article.topics[0].name}`}
-        </p>
-        <h2 id="featured-article-title" className="mt-4 text-[clamp(1.5rem,1.3rem+0.6vw,1.875rem)] font-medium leading-tight tracking-[-0.02em] text-balance text-ink">
+        {/* The page's heading already says it's the latest: just its topic here */}
+        {article.topics[0] && <p className={`mb-4 ${metaCaps}`}>{article.topics[0].name}</p>}
+        <h3 className="text-[clamp(1.5rem,1.3rem+0.6vw,1.875rem)] font-medium leading-tight tracking-[-0.02em] text-balance text-ink">
           <Link href={href} className="hover:underline hover:decoration-rule-strong hover:underline-offset-[0.15em]">
             {article.title}
           </Link>
-        </h2>
+        </h3>
         {article.summary && <p className={`mt-5 max-w-[42ch] ${bodyText}`}>{article.summary}</p>}
         <p className="mt-6 text-sm text-muted">
           {[article.author, formatDate(article.date), `${article.minutes} min read`].filter(Boolean).join(" · ")}
@@ -67,6 +66,6 @@ export function FeaturedArticle({ article }: { article: ArticleSummary }) {
           </Link>
         </div>
       </div>
-    </section>
+    </article>
   );
 }

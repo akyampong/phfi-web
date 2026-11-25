@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { message } from "@/db/schema";
+import { getSession } from "@/lib/session";
 
 export type SendState =
   | { status: "idle" }
@@ -52,10 +53,14 @@ export async function sendMessage(_previous: SendState, form: FormData): Promise
   if (times.length >= PER_TEN_MINUTES) return fail(values, { message: "You’ve sent a few already. Please try again in a few minutes." });
   recent.set(ip, [...times, now]);
 
+  // Signed in: linked to the account, so it shows on /account (with whether it's been prayed for)
+  const session = await getSession().catch(() => null);
+
   try {
     await db.insert(message).values({
       id: randomUUID(),
       kind,
+      userId: session?.user.id ?? null,
       name: name || null,
       email: email || null,
       body,

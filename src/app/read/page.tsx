@@ -29,16 +29,19 @@ export default async function ReadPage() {
   return (
     <PageTransition>
       <div className="container-page pb-12 md:pb-16 lg:pb-20">
-        <div className="content-width flex flex-col gap-24 pt-12 md:gap-32 md:pt-16 lg:gap-40 lg:pt-20">
-          <div className="flex flex-col gap-14 md:gap-20">
-            <header>
-              <h1 className="text-page-sm text-ink">Read</h1>
-              <p className={`mt-5 max-w-[52ch] ${bodyText}`}>
-                Articles to keep you close to Christ through the week: on prayer, the Psalms, life together and more.
-              </p>
-            </header>
-            {articles[0] && <FeaturedArticle article={articles[0]} />}
-          </div>
+        <h1 className="sr-only">Read</h1>
+        {/* Spaced like /watch: a plain section heading over the newest article, no page title */}
+        <div className="content-width flex flex-col gap-16 pt-8 md:gap-20 md:pt-10 lg:gap-24 lg:pt-12">
+          {articles[0] && (
+            <section aria-labelledby="latest-title">
+              <h2 id="latest-title" className="text-section text-ink">
+                Latest article
+              </h2>
+              <div className="mt-8 lg:mt-10">
+                <FeaturedArticle article={articles[0]} />
+              </div>
+            </section>
+          )}
 
           {articles.length > 1 && (
             // The address can point here directly: /read?topic=prayer#all

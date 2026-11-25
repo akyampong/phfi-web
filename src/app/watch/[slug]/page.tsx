@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowUpRight, BookOpen, Layers } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
+import { SaveButton } from "@/components/ui/save-button";
 import { ShareButton } from "@/components/ui/share-button";
 import { actionButton, bodyText, metaCaps } from "@/components/ui/styles";
 import { MessageRow } from "@/components/watch/cards";
@@ -91,6 +92,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
               {/* Edge to edge on phones, like the live page */}
               <div id="player" className="-mx-5 scroll-mt-20 md:mx-0">
                 <Player
+                  slug={message.slug}
                   videoId={message.videoId}
                   title={message.title}
                   image={message.image}
@@ -122,6 +124,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
                       Part {message.series.part} of {series.title}
                     </Link>
                   )}
+                  <SaveButton kind="message" slug={message.slug} />
                   <ShareButton title={message.title} path={`/watch/${message.slug}`} />
                   {message.videoId && (
                     <a href={`https://www.youtube.com/watch?v=${message.videoId}`} target="_blank" rel="noreferrer" className={actionButton}>

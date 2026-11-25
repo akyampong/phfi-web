@@ -3,7 +3,9 @@ import { Figtree } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeScript } from "@/components/layout/theme-script";
+import { SignInModal } from "@/components/auth/sign-in-modal";
 import { Drawers } from "@/components/drawers/drawers";
+import { googleEnabled } from "@/lib/auth";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -50,6 +52,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteFooter />
         {/* The prayer request and contact forms: open from any "#pray" or "#contact" link */}
         <Drawers />
+        {/* Sign-in: opens from any "#sign-in" link on any page */}
+        <SignInModal googleEnabled={googleEnabled} />
       </body>
     </html>
   );

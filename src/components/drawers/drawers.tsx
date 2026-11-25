@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Check, X } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
 import { sendMessage, type SendState } from "./actions";
 
 type Kind = "prayer" | "contact";
@@ -188,6 +189,11 @@ function DrawerForm({ kind, onDone }: { kind: Kind; onDone: () => void }) {
   const values = error?.values;
   const prayer = kind === "prayer";
   const id = (name: string) => `${kind}-${name}`;
+  // Signed in: a message is from them, so fill in who they are. A prayer request can be
+  // anonymous, so it's left to them (it still shows on their account page).
+  const { data: session } = useSession();
+  const me = session?.user;
+  const known = prayer ? undefined : me;
 
   // When the form appeared, so one sent within moments (a bot) can be told apart.
   useEffect(() => {
@@ -243,7 +249,7 @@ function DrawerForm({ kind, onDone }: { kind: Kind; onDone: () => void }) {
   );
 
   return (
-    <form key={round} action={action} className="flex flex-col gap-6" noValidate>
+    <form key={`${round}-${known?.id ?? ""}`} action={action} className="flex flex-col gap-6" noValidate>
       <input type="hidden" name="kind" value={kind} />
       <input ref={started} type="hidden" name="startedAt" defaultValue="" />
       {/* Hidden from people; bots fill it in */}
@@ -258,13 +264,13 @@ function DrawerForm({ kind, onDone }: { kind: Kind; onDone: () => void }) {
         <label htmlFor={id("name")} className={label}>
           Name {prayer && optional}
         </label>
-        <input id={id("name")} name="name" type="text" autoComplete="name" maxLength={100} required={!prayer} defaultValue={values?.name} aria-invalid={error?.field === "name"} className={`${field} h-12`} />
+        <input id={id("name")} name="name" type="text" autoComplete="name" maxLength={100} required={!prayer} defaultValue={values?.name ?? (known?.name || undefined)} aria-invalid={error?.field === "name"} className={`${field} h-12`} />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor={id("email")} className={label}>
           Email {prayer && !followUp && optional}
         </label>
-        <input id={id("email")} name="email" type="email" autoComplete="email" maxLength={200} required={!prayer || followUp} defaultValue={values?.email} aria-invalid={error?.field === "email"} className={`${field} h-12`} />
+        <input id={id("email")} name="email" type="email" autoComplete="email" maxLength={200} required={!prayer || followUp} defaultValue={values?.email ?? known?.email} aria-invalid={error?.field === "email"} className={`${field} h-12`} />
       </div>
       {!prayer && body}
       {prayer && (
@@ -286,6 +292,7 @@ function DrawerForm({ kind, onDone }: { kind: Kind; onDone: () => void }) {
         </button>
         <p className="mt-4 text-sm leading-relaxed text-night-muted">
           {prayer ? "Private: only our prayer team sees requests. They’re never shared or shown on the site." : "We’ll reply to the email address you give."}
+          {prayer && me && " You’ll find it on your account page too."}
         </p>
       </div>
     </form>

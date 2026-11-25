@@ -10,6 +10,8 @@ import { X } from "lucide-react";
  */
 /** The event the search shortcut sends to open the menu with its search field focused. */
 export const OPEN_MENU_SEARCH = "phfi:open-menu-search";
+/** Sent to close the menu, e.g. when its Sign in link opens the sign-in modal instead. */
+export const CLOSE_MENU = "phfi:close-menu";
 
 export function SiteMenu({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -26,8 +28,13 @@ export function SiteMenu({ children }: { children: ReactNode }) {
       focusSearchRef.current = true;
       setOpen(true);
     };
+    const close = () => setOpen(false);
     window.addEventListener(OPEN_MENU_SEARCH, openForSearch);
-    return () => window.removeEventListener(OPEN_MENU_SEARCH, openForSearch);
+    window.addEventListener(CLOSE_MENU, close);
+    return () => {
+      window.removeEventListener(OPEN_MENU_SEARCH, openForSearch);
+      window.removeEventListener(CLOSE_MENU, close);
+    };
   }, []);
 
   useEffect(() => {

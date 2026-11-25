@@ -20,6 +20,7 @@ export function MessageCard({
   preload = false,
   withSummary = false,
   large = false,
+  progress,
 }: {
   message: Message;
   sizes: string;
@@ -28,6 +29,8 @@ export function MessageCard({
   withSummary?: boolean;
   /** Larger: rounder picture and a bigger title, for the latest messages at the top of /watch. */
   large?: boolean;
+  /** How far through it someone is, 0 to 1: a thin bar along the bottom of the picture. */
+  progress?: number;
 }) {
   return (
     <Link href={`/watch/${message.slug}`} className="group block">
@@ -41,8 +44,13 @@ export function MessageCard({
           className="transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
         />
         {message.seconds !== undefined && (
-          <span className={`absolute bottom-3 right-3 rounded-squircle-xs px-2 py-0.5 text-xs font-semibold tabular-nums ${glass}`}>
+          <span className={`absolute right-3 rounded-squircle-xs px-2 py-0.5 text-xs font-semibold tabular-nums ${glass} ${progress !== undefined ? "bottom-4" : "bottom-3"}`}>
             {formatLength(message.seconds)}
+          </span>
+        )}
+        {progress !== undefined && (
+          <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-white/35">
+            <span className="block h-full bg-white" style={{ width: `${Math.round(Math.min(1, Math.max(0, progress)) * 100)}%` }} />
           </span>
         )}
       </span>

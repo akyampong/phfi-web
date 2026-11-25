@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { mainNav, meetingSchedule, siteConfig } from "@/config/site";
-import { AccountButton, AccountButtonPlaceholder, SignedInAs, drawerButtonPrimary } from "./account";
+import { AccountButton, AccountButtonPlaceholder, HeaderAccount, HeaderAccountPlaceholder, SignedInAs, drawerButtonPrimary } from "./account";
 import { LiveIndicator } from "./live-indicator";
 import { LiveNav } from "./live-nav";
 import { NavLinks } from "./nav-links";
@@ -43,6 +43,9 @@ export function SiteHeader() {
           {/* ⌘/ (Ctrl+/) jumps into search from anywhere */}
           <SearchShortcut />
           <SearchBar id="header-search" className="hidden w-52 lg:block xl:w-64" />
+          <Suspense fallback={<HeaderAccountPlaceholder />}>
+            <HeaderAccount />
+          </Suspense>
 
           <SiteMenu>
             <DrawerSection className="flex flex-col gap-8">

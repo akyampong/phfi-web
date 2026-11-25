@@ -11,9 +11,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight, Play, RotateCcw } from "lucide-react";
+import { getProgress, saveProgress } from "@/app/account/actions";
 import type { ArtSpec } from "@/components/art/artwork";
 import { Cover, type Photo } from "@/components/art/cover";
+import { useSession } from "@/lib/auth-client";
 import { formatLength, formatTimestamp, type Chapter } from "@/lib/watch-types";
 
 type PlayerState = {
@@ -64,6 +66,8 @@ function usePlayer() {
 }
 
 type PlayerProps = {
+  /** The message's address, for remembering where a signed-in viewer got to. */
+  slug?: string;
   videoId?: string;
   title: string;
   image?: Photo;
@@ -73,13 +77,36 @@ type PlayerProps = {
   embeddable?: boolean;
 };
 
+/** Watched less than this, it hasn't really been started; past this share of it, it's finished. */
+const STARTED = 30;
+const NEARLY_DONE = 0.95;
+
 /**
  * A YouTube video that loads only when it's played: until then a poster (its thumbnail and a
  * play button) keeps the page light and quick. Upright videos (Shorts) get an upright frame.
- * Leaving the page stops it, and coming back has it ready where it was left.
+ * Leaving the page stops it, and coming back has it ready where it was left. Signed in, it
+ * remembers where you got to (for "Continue watching" on /account) and offers to resume.
  */
-export function Player({ videoId, title, image, art, seconds, vertical = false, embeddable = true }: PlayerProps) {
+export function Player({ slug, videoId, title, image, art, seconds, vertical = false, embeddable = true }: PlayerProps) {
   const { playing, play } = usePlayer();
+  const { data: session } = useSession();
+  const signedIn = Boolean(session?.user.id);
+  const [saved, setSaved] = useState<{ seconds: number; duration: number | null } | null>(null);
+
+  useEffect(() => {
+    if (!signedIn || !slug || !videoId) return;
+    let live = true;
+    getProgress(slug)
+      .then((progress) => live && setSaved(progress))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [signedIn, slug, videoId]);
+
+  const length = saved?.duration ?? seconds;
+  const resumeAt =
+    signedIn && saved && saved.seconds >= STARTED && !(length && saved.seconds / length >= NEARLY_DONE) ? saved.seconds : undefined;
 
   const frame = vertical
     ? "relative mx-auto aspect-[9/16] h-[min(78svh,48rem)] max-w-full overflow-hidden rounded-squircle-lg bg-black"
@@ -119,38 +146,60 @@ export function Player({ videoId, title, image, art, seconds, vertical = false, 
   return (
     <div className={frame}>
       {playing ? (
-        <YouTubeFrame videoId={videoId} title={title} />
+        <YouTubeFrame videoId={videoId} title={title} slug={signedIn ? slug : undefined} />
       ) : (
-        <button
-          type="button"
-          onClick={() => play()}
-          aria-label={`Play ${title}`}
-          className="group absolute inset-0 size-full cursor-pointer"
-        >
-          <Cover
-            photo={image}
-            art={art}
-            uid="player"
-            sizes="(min-width: 1024px) 66vw, 100vw"
-            preload
-            className="transition-transform duration-700 ease-out group-hover:scale-[1.015] motion-reduce:transition-none"
-          />
-          <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-black/10" />
-          {/* The same frosted play button as the home page's featured message */}
-          <span aria-hidden className="absolute inset-0 flex items-center justify-center">
-            <span className="flex size-16 items-center justify-center rounded-full bg-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-brightness-[0.8] transition-colors duration-300 group-hover:bg-white/20 sm:size-20">
-              <Play className="ml-1 size-6 fill-current sm:size-7" />
+        <>
+          <button
+            type="button"
+            onClick={() => play(resumeAt)}
+            aria-label={resumeAt !== undefined ? `Resume ${title} from ${formatTimestamp(resumeAt)}` : `Play ${title}`}
+            className="group absolute inset-0 size-full cursor-pointer"
+          >
+            <Cover
+              photo={image}
+              art={art}
+              uid="player"
+              sizes="(min-width: 1024px) 66vw, 100vw"
+              preload
+              className="transition-transform duration-700 ease-out group-hover:scale-[1.015] motion-reduce:transition-none"
+            />
+            <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-black/10" />
+            {/* The same frosted play button as the home page's featured message */}
+            <span aria-hidden className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+              <span className="flex size-16 items-center justify-center rounded-full bg-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-brightness-[0.8] transition-colors duration-300 group-hover:bg-white/20 sm:size-20">
+                <Play className="ml-1 size-6 fill-current sm:size-7" />
+              </span>
+              {resumeAt !== undefined && (
+                <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-semibold tabular-nums text-white backdrop-blur-md">
+                  Resume from {formatTimestamp(resumeAt)}
+                </span>
+              )}
             </span>
-          </span>
-          {seconds !== undefined && (
-            <span
-              aria-hidden
-              className="absolute bottom-4 right-4 rounded-squircle-xs bg-black/50 px-2 py-0.5 text-xs font-semibold tabular-nums text-white backdrop-blur-md sm:bottom-6 sm:right-6"
+            {seconds !== undefined && (
+              <span
+                aria-hidden
+                className="absolute bottom-4 right-4 rounded-squircle-xs bg-black/50 px-2 py-0.5 text-xs font-semibold tabular-nums text-white backdrop-blur-md sm:bottom-6 sm:right-6"
+              >
+                {formatLength(seconds)}
+              </span>
+            )}
+            {resumeAt !== undefined && length && (
+              <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-white/30">
+                <span className="block h-full bg-white" style={{ width: `${Math.round((resumeAt / length) * 100)}%` }} />
+              </span>
+            )}
+          </button>
+          {resumeAt !== undefined && (
+            <button
+              type="button"
+              onClick={() => play(0)}
+              className="absolute bottom-4 left-4 inline-flex cursor-pointer items-center gap-1.5 rounded-squircle-xs bg-black/50 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-md transition-colors hover:bg-black/65 sm:bottom-6 sm:left-6"
             >
-              {formatLength(seconds)}
-            </span>
+              <RotateCcw aria-hidden className="size-3.5" />
+              Start over
+            </button>
           )}
-        </button>
+        </>
       )}
     </div>
   );
@@ -161,12 +210,36 @@ export function Player({ videoId, title, image, art, seconds, vertical = false, 
  * be swapped for a blank page while the page is hidden: Next keeps pages you've left alive
  * (display: none) so Back is instant, and a hidden player would otherwise play on out of sight.
  */
-function YouTubeFrame({ videoId, title }: { videoId: string; title: string }) {
+function YouTubeFrame({ videoId, title, slug }: { videoId: string; title: string; slug?: string }) {
   const { frameRef, start, setTime } = usePlayer();
   const timeRef = useRef(start);
+  const durationRef = useRef<number | undefined>(undefined);
   const resumeRef = useRef<number | undefined>(undefined);
   /** Whether YouTube has reported any progress yet. */
   const reportedRef = useRef(false);
+  const savedAtRef = useRef(-1);
+
+  // Signed in (slug is set): remember where they've got to now and then, and on leaving
+  useEffect(() => {
+    if (!slug) return;
+    const save = () => {
+      if (!reportedRef.current) return;
+      const at = Math.floor(timeRef.current);
+      if (Math.abs(at - savedAtRef.current) < 5) return;
+      savedAtRef.current = at;
+      saveProgress(slug, at, durationRef.current).catch(() => {});
+    };
+    const onVisibility = () => document.visibilityState === "hidden" && save();
+    const timer = window.setInterval(save, 15_000);
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pagehide", save);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pagehide", save);
+      save();
+    };
+  }, [slug]);
 
   useLayoutEffect(() => {
     const frame = frameRef.current;
@@ -192,6 +265,8 @@ function YouTubeFrame({ videoId, title }: { videoId: string; title: string }) {
       try {
         const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
         const current = data?.info?.currentTime;
+        const duration = data?.info?.duration;
+        if (typeof duration === "number" && duration > 0) durationRef.current = duration;
         if (typeof current === "number") {
           reportedRef.current = true;
           timeRef.current = current;

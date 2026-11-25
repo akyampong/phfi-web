@@ -10,17 +10,21 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "auth:generate": "bunx auth@latest generate --config src/lib/auth.ts --output src/db/auth-schema.ts --yes",
+    "db:up": "docker compose up -d --wait db",
+    "db:down": "docker compose stop db",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@libsql/client": "^0.18.0",
+    "@dicebear/core": "10.7.0",
+    "@dicebear/styles": "10.6.0",
     "better-auth": "^1.7.18",
     "drizzle-orm": "^0.45.4",
     "lucide-react": "^1.70.0",
     "marked": "15",
     "next": "16.4.6",
+    "pg": "8",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1"
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
+    "@types/pg": "8",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.11",

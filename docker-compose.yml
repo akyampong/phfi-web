@@ -1,0 +1,24 @@
+# Local Postgres for development: `bun run db:up` starts it, `bun run db:down` stops it.
+# The data lives in the phfi-db volume, so it survives restarts. These credentials are for
+# your machine only; the live database has its own (DATABASE_URL in the host's settings).
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: phfi-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: phfi
+      POSTGRES_PASSWORD: phfi
+      POSTGRES_DB: phfi
+    ports:
+      - "5432:5432"
+    volumes:
+      - phfi-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phfi -d phfi"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  phfi-db:
