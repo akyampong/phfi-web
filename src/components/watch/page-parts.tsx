@@ -8,7 +8,7 @@ export function PageIntro({ title, children, after }: { title: string; children:
   return (
     <header className="flex flex-col gap-8">
       <div>
-        <h1 className="text-page text-ink">{title}</h1>
+        <h1 className="text-page-sm text-ink">{title}</h1>
         <p className={`mt-5 max-w-[52ch] ${bodyText}`}>{children}</p>
       </div>
       {after}
@@ -20,7 +20,7 @@ export function PageIntro({ title, children, after }: { title: string; children:
 export function SectionHeading({ id, title, href, linkLabel = "View all" }: { id: string; title: string; href?: string; linkLabel?: string }) {
   return (
     <div className="flex items-end justify-between gap-6">
-      <h2 id={id} className="text-headline text-ink">
+      <h2 id={id} className="text-section text-ink">
         {title}
       </h2>
       {href && (

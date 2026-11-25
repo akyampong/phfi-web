@@ -18,7 +18,9 @@ export function SiteFooter() {
               <p className="text-[0.95rem] leading-relaxed text-muted">{siteConfig.description}</p>
             </div>
 
-            <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
+            {/* The groups sit at the right, the last one ending on the page's right edge, however
+                many groups there are (two to a row on phones) */}
+            <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:flex sm:justify-end sm:gap-x-16 xl:gap-x-24">
               {footerNav.map((group) => (
                 <div key={group.title}>
                   <h2 className="label-caps text-ink">{group.title}</h2>

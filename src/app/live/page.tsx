@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * The live page: only while a stream is on (otherwise LiveStage sends visitors to the meeting
- * calendar). Full width under the header, in the site's light or dark mode.
+ * The live page: the stream while one is on, and a "stream has ended" screen the rest of the
+ * time (see LiveStage). Full width under the header, in the site's light or dark mode.
  */
 export default function LivePage() {
   return (

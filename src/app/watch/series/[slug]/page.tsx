@@ -75,7 +75,7 @@ async function SeriesView({ params }: Pick<PageProps<"/watch/series/[slug]">, "p
             <p className="text-sm font-medium text-white/75">
               Series · {parts.length} {parts.length === 1 ? "message" : "messages"} · {range}
             </p>
-            <h1 className="mt-4 max-w-[18ch] text-page text-balance text-white">
+            <h1 className="mt-4 max-w-[20ch] text-page-sm text-balance text-white">
               {series.title}
             </h1>
             {series.description && (
@@ -94,7 +94,7 @@ async function SeriesView({ params }: Pick<PageProps<"/watch/series/[slug]">, "p
         </header>
 
         <section aria-labelledby="parts-title" className="mt-16 md:mt-24">
-          <h2 id="parts-title" className="text-headline text-ink">
+          <h2 id="parts-title" className="text-section text-ink">
             Messages
           </h2>
           <ol className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-8">
@@ -135,7 +135,7 @@ function PartRow({ message, part }: { message: Message; part: number }) {
           {formatDate(message.date)}
           {message.seconds !== undefined && ` · ${formatLength(message.seconds)}`}
         </span>
-        <h3 className="mt-2 text-title text-ink">
+        <h3 className="mt-2 text-card text-ink">
           <span className={groupUnderline}>{message.title}</span>
         </h3>
         {message.scripture && <span className="mt-1.5 block text-[0.95rem] font-medium text-ink">{message.scripture.reference}</span>}

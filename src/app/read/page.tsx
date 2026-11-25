@@ -32,7 +32,7 @@ export default async function ReadPage() {
         <div className="content-width flex flex-col gap-24 pt-12 md:gap-32 md:pt-16 lg:gap-40 lg:pt-20">
           <div className="flex flex-col gap-14 md:gap-20">
             <header>
-              <h1 className="text-page text-ink">Read</h1>
+              <h1 className="text-page-sm text-ink">Read</h1>
               <p className={`mt-5 max-w-[52ch] ${bodyText}`}>
                 Articles to keep you close to Christ through the week: on prayer, the Psalms, life together and more.
               </p>
@@ -44,7 +44,7 @@ export default async function ReadPage() {
             // The address can point here directly: /read?topic=prayer#all
             <section id="all" aria-labelledby="all-title" className="scroll-mt-24">
               <Reveal>
-                <h2 id="all-title" className="text-headline text-ink">
+                <h2 id="all-title" className="text-section text-ink">
                   All articles
                 </h2>
               </Reveal>

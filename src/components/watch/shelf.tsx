@@ -68,7 +68,7 @@ export function Shelf({ id, title, detail, href, size, children }: ShelfProps) {
     <section aria-labelledby={id}>
       <div className="flex items-end justify-between gap-6">
         <div className="flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h2 id={id} className="text-[clamp(1.5rem,1.25rem+0.8vw,2rem)] font-medium leading-tight tracking-[-0.02em] text-ink">
+          <h2 id={id} className="text-section text-ink">
             {title}
           </h2>
           {detail && <p className="text-sm text-muted">{detail}</p>}

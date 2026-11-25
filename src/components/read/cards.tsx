@@ -29,7 +29,7 @@ export function ArticleCard({ article, sizes }: { article: ArticleSummary; sizes
         )}
       </span>
       <span className="mt-5 block">
-        <h3 className="text-title text-ink">
+        <h3 className="text-card text-ink">
           <span className={groupUnderline}>{article.title}</span>
         </h3>
         <p className={`mt-2 ${metaCaps}`}>{articleMeta(article)}</p>
@@ -51,7 +51,7 @@ export function FeaturedArticle({ article }: { article: ArticleSummary }) {
         <p className={metaCaps}>
           Latest{article.topics[0] && ` · ${article.topics[0].name}`}
         </p>
-        <h2 id="featured-article-title" className="mt-4 text-headline text-balance text-ink">
+        <h2 id="featured-article-title" className="mt-4 text-[clamp(1.5rem,1.3rem+0.6vw,1.875rem)] font-medium leading-tight tracking-[-0.02em] text-balance text-ink">
           <Link href={href} className="hover:underline hover:decoration-rule-strong hover:underline-offset-[0.15em]">
             {article.title}
           </Link>

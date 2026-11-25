@@ -133,7 +133,7 @@ export function LiveExperience({ stream, host, week }: { stream: Stream; host: s
         {/* Chat and Pray along: beside the player on wide screens (same height), below it on phones */}
         {/* Just an outline in light mode (a slight lift in dark, where an outline alone reads faintly).
             Everything inside sits 6px in from the panel's edge, so the panel's outline shows all the
-            way round, and inner corners are the panel's 20px less that gap: 14px (rounded-squircle-xs) */}
+            way round, and inner corners are the panel's 18px less that gap: 12px (rounded-squircle-xs) */}
         <aside
           className={`flex h-[70svh] flex-col gap-1.5 overflow-hidden rounded-squircle-sm p-1.5 ring-1 ring-rule ring-inset lg:h-auto dark:bg-canvas ${
             theatre ? "lg:hidden" : ""

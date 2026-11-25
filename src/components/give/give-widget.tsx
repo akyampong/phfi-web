@@ -261,8 +261,8 @@ function Segmented<T extends string>({
           role="radio"
           aria-checked={option.value === value}
           onClick={() => onChange(option.value)}
-          // Inside the 14px squircle, 4px in: 10px corners so the curves nest
-          className={`h-10 flex-1 cursor-pointer rounded-[4px] px-3 text-sm font-semibold transition-colors supports-[corner-shape:squircle]:rounded-[10px] supports-[corner-shape:squircle]:[corner-shape:squircle] ${
+          // Inside the 12px squircle, 4px in: 8px corners so the curves nest
+          className={`h-10 flex-1 cursor-pointer rounded-[3px] px-3 text-sm font-semibold transition-colors supports-[corner-shape:squircle]:rounded-[8px] supports-[corner-shape:squircle]:[corner-shape:squircle] ${
             option.value === value ? "bg-paper text-ink shadow-[0_1px_3px_rgba(0,0,0,0.12)]" : "text-muted hover:text-ink"
           }`}
         >

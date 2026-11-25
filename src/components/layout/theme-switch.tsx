@@ -30,8 +30,8 @@ export function ThemeSwitch() {
               role="radio"
               aria-checked={on}
               onClick={() => setThemeChoice(value)}
-              // Squircle corners sized to sit evenly inside the group's (14px squircle, 4px padding)
-              className={`inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[4px] px-2.5 supports-[corner-shape:squircle]:rounded-[10px] supports-[corner-shape:squircle]:[corner-shape:squircle] text-[0.8rem] font-semibold transition-colors ${
+              // Squircle corners sized to sit evenly inside the group's (12px squircle, 4px padding)
+              className={`inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[3px] px-2.5 supports-[corner-shape:squircle]:rounded-[8px] supports-[corner-shape:squircle]:[corner-shape:squircle] text-[0.8rem] font-semibold transition-colors ${
                 on ? "bg-white text-coal" : "text-night-text hover:bg-white/10 hover:text-white"
               }`}
             >

@@ -51,7 +51,7 @@ export function MessageCard({
         <h3
           title={message.title}
           // Room below for the hover underline, which the one-line clip would otherwise cut off
-          className={`line-clamp-1 pb-[0.2em] ${large ? "text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] font-medium leading-snug tracking-[-0.015em] text-ink" : "text-title text-ink"}`}
+          className={`line-clamp-1 pb-[0.2em] ${large ? "text-[1.125rem] font-semibold leading-snug tracking-[-0.01em] text-ink" : "text-card text-ink"}`}
         >
           <span className={groupUnderline}>{message.title}</span>
         </h3>

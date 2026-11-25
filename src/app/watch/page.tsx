@@ -43,7 +43,7 @@ export default async function WatchPage() {
 
           {full.length > 0 && (
             <section aria-labelledby="latest-title">
-              <h2 id="latest-title" className="text-headline text-ink">
+              <h2 id="latest-title" className="text-section text-ink">
                 Latest messages
               </h2>
               <ul className="mt-8 grid gap-x-6 gap-y-10 md:grid-cols-3 lg:mt-10 lg:gap-x-8">
@@ -93,7 +93,7 @@ export default async function WatchPage() {
           {full.length > LATEST && (
             // The address can point here directly: /watch?meeting=jericho-hour#all
             <section id="all" aria-labelledby="all-title" className="scroll-mt-24">
-              <h2 id="all-title" className="text-headline text-ink">
+              <h2 id="all-title" className="text-section text-ink">
                 More messages
               </h2>
               <div className="mt-6 md:mt-8">

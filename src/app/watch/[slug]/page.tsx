@@ -102,7 +102,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
               </div>
 
               <header className="mt-6 lg:mt-8">
-                <h1 className="max-w-[36ch] text-[clamp(1.5rem,1.3rem+0.8vw,2rem)] font-medium leading-tight tracking-[-0.02em] text-balance text-ink">{message.title}</h1>
+                <h1 className="max-w-[44ch] text-[clamp(1.25rem,1.1rem+0.5vw,1.625rem)] font-medium leading-snug tracking-[-0.015em] text-balance text-ink">{message.title}</h1>
                 <p className={`mt-3 ${metaCaps}`}>
                   {[message.meeting, formatDate(message.date), message.seconds !== undefined && formatLength(message.seconds)]
                     .filter(Boolean)
@@ -155,7 +155,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
               {series && parts.length > 1 && (
                 <section aria-labelledby="series-parts-title">
                   <p className={metaCaps}>Series · {parts.length} messages</p>
-                  <h2 id="series-parts-title" className="mt-2 text-title text-ink">
+                  <h2 id="series-parts-title" className="mt-2 text-card text-ink">
                     <Link href={`/watch/series/${series.slug}`} className="hover:underline hover:underline-offset-4">
                       {series.title}
                     </Link>
@@ -171,7 +171,7 @@ async function MessageView({ params }: Pick<PageProps<"/watch/[slug]">, "params"
               )}
               {more.length > 0 && (
                 <section aria-labelledby="more-title">
-                  <h2 id="more-title" className="text-title text-ink">
+                  <h2 id="more-title" className="text-card text-ink">
                     {isClip ? "More clips" : "More messages"}
                   </h2>
                   <ul className="mt-5 flex flex-col gap-4">

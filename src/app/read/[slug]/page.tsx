@@ -50,8 +50,8 @@ export default function ArticlePage({ params }: PageProps<"/read/[slug]">) {
   );
 }
 
-/** The column the article is read in: about 70 characters a line, from the picture's left edge. */
-const column = "w-full max-w-[42rem]";
+/** Pieces inside the article's column take its full width. */
+const column = "w-full";
 
 async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">) {
   const { slug } = await params;
@@ -64,7 +64,8 @@ async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">
     <article className="container-page pb-12 pt-6 md:pb-16 lg:pb-20 lg:pt-8">
       <ArticleJsonLd article={article} />
       <div className="content-width">
-        {/* The trail, title, picture and text all start from the same left edge: the picture's */}
+        {/* One column for everything, the picture included, so its edges and the text's line up:
+            the picture's full width, 64rem, centred */}
         <div className="mx-auto max-w-[64rem]">
           <Breadcrumbs
             trail={[
@@ -78,7 +79,7 @@ async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">
             <p className={metaCaps}>
               {formatDate(article.date)} · {article.minutes} min read
             </p>
-            <h1 className="mt-4 text-page text-balance text-ink">
+            <h1 className="mt-4 text-[clamp(1.875rem,1.6rem+0.9vw,2.5rem)] font-medium leading-[1.1] tracking-[-0.025em] text-balance text-ink">
               {article.title}
             </h1>
             {article.summary && (
@@ -132,7 +133,7 @@ async function ArticleView({ params }: Pick<PageProps<"/read/[slug]">, "params">
 
         {more.length > 0 && (
           <section aria-labelledby="more-title" className="mt-24 md:mt-32">
-            <h2 id="more-title" className="text-headline text-ink">
+            <h2 id="more-title" className="text-section text-ink">
               Keep reading
             </h2>
             <ul className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 md:mt-10 lg:grid-cols-3 lg:gap-x-8">
